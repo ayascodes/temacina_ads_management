@@ -1,0 +1,31 @@
+.statusButton {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    min-width: 100px;
+    border: none;
+  }
+  
+  .approved {
+    background-color: #28a745;
+  }
+  
+  .rejected {
+    background-color: #dc3545;
+  }
+  
+  .edited {
+    background-color: #ffc107;
+  }
+  
+  .pending {
+    background-color: #6c757d;
+  }
+  .expired {
+    background-color: #8B4513;
+  }
+  

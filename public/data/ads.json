@@ -1,0 +1,55 @@
+{
+    "ads": [
+      {
+        "id": 1,
+        "type_de_publicite": "Mega Haut Slide",
+        "description": "Page Secteur Industrie",
+        "commence_le": "2024-09-10",
+        "duree": "5 jours",
+        "origine_de_lentreprise": "Algérienne",
+        "montant_totale": "100000 DZD",
+        "status": "Approved"
+      },
+      {
+        "id": 2,
+        "type_de_publicite": "Nom de Produit: Itech",
+        "description": "Page Secteur IT",
+        "commence_le": "2024-09-12",
+        "duree": "10 jours",
+        "origine_de_lentreprise": "International",
+        "montant_totale": "1500 USD",
+        "status": "Pending"
+      },
+      {
+        "id": 3,
+        "type_de_publicite": "Mega Haut Slide",
+        "description": "Page Secteur Agriculture",
+        "commence_le": "2024-09-08",
+        "duree": "5 jours",
+        "origine_de_lentreprise": "Algérienne",
+        "montant_totale": "85000 DZD",
+        "status": "Rejected"
+      },
+      {
+        "id": 4,
+        "type_de_publicite": "Nom de Produit: TechVision",
+        "description": "Page Secteur Innovation",
+        "commence_le": "2024-09-15",
+        "duree": "7 jours",
+        "origine_de_lentreprise": "International",
+        "montant_totale": "2000 USD",
+        "status": "Approved"
+      },
+      {
+        "id": 5,
+        "type_de_publicite": "Mega Haut Slide",
+        "description": "Page Secteur Automobile",
+        "commence_le": "2024-09-01",
+        "duree": "5 jours",
+        "origine_de_lentreprise": "Algérienne",
+        "montant_totale": "120000 DZD",
+        "status": "Expired"
+      }
+    ]
+  }
+  

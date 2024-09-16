@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "name": "Frozen yoghurt",
+    "secteur": "Food",
+    "categorie": "Desserts",
+    "sousCategorie": "Yoghurts",
+    "prix": "$4.00",
+    "status": "Approved"
+  },
+  {
+    "id": 2,
+    "name": "Ice cream sandwich",
+    "secteur": "Food",
+    "categorie": "Desserts",
+    "sousCategorie": "Ice Cream",
+    "prix": "$5.50",
+    "status": "Pending"
+  },
+  {
+    "id": 3,
+    "name": "Eclair",
+    "secteur": "Bakery",
+    "categorie": "Pastry",
+    "sousCategorie": "Eclair",
+    "prix": "$3.00",
+    "status": "Rejected"
+  },
+  {
+    "id": 4,
+    "name": "Cupcake",
+    "secteur": "Bakery",
+    "categorie": "Pastry",
+    "sousCategorie": "Cupcake",
+    "prix": "$2.75",
+    "status": "Edited"
+  },
+  {
+    "id": 5,
+    "name": "Gingerbread",
+    "secteur": "Food",
+    "categorie": "Snacks",
+    "sousCategorie": "Cookies",
+    "prix": "$4.50",
+    "status": "Approved"
+  },
+  {
+    "id": 6,
+    "name": "Gingerbread",
+    "secteur": "Food",
+    "categorie": "Snacks",
+    "sousCategorie": "Cookies",
+    "prix": "$4.50",
+    "status": "Approved"
+  },
+  {
+    "id": 7,
+    "name": "Gingerbread",
+    "secteur": "Food",
+    "categorie": "Snacks",
+    "sousCategorie": "Cookies",
+    "prix": "$4.50",
+    "status": "Approved"
+  },
+  {
+    "id": 8,
+    "name": "Gingerbread",
+    "secteur": "Food",
+    "categorie": "Snacks",
+    "sousCategorie": "Cookies",
+    "prix": "$4.50",
+    "status": "Approved"
+  },
+  {
+    "id": 9,
+    "name": "Gingerbread",
+    "secteur": "Food",
+    "categorie": "Snacks",
+    "sousCategorie": "Cookies",
+    "prix": "$4.50",
+    "status": "Approved"
+  },
+  {
+    "id": 10,
+    "name": "Gingerbread",
+    "secteur": "Food",
+    "categorie": "Snacks",
+    "sousCategorie": "Cookies",
+    "prix": "$4.50",
+    "status": "Approved"
+  }
+]
