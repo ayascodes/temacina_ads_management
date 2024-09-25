@@ -34,12 +34,10 @@ const theme = createTheme({
 const ParentComponent = () => {
   const [value, setValue] = useState('adsCreation');
   const [scrollPosition, setScrollPosition] = useState(0);
-
   const handleChange = (event, newValue) => {
     setScrollPosition(window.pageYOffset);
     setValue(newValue);
   };
-
   useEffect(() => {
     window.scrollTo(0, scrollPosition);
   }, [value, scrollPosition]);
