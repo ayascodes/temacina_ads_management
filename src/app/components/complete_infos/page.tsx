@@ -9,14 +9,17 @@ type Product = {
   description: string;
 };
 
-const CompleteInfoStep: React.FC = () => {
+interface CompleteInfoStepProps {
+  onAdDataSubmit: (data: any) => void; // Add the prop type
+}
+
+const CompleteInfoStep: React.FC<CompleteInfoStepProps> = ({ onAdDataSubmit }) => {
   const dispatch = useDispatch();
   
   // Select data from Redux store
   const selectedOffer = useSelector((state: RootState) => state.offer.selectedOffer);
   const selectedProductId = useSelector((state: RootState) => state.product.selectedProductId);
-  /* const companyOrigin = useSelector((state: RootState) => state.company.origin); */
-  const companyOrigin = "algerienne"; // for now
+  const companyOrigin = "algerienne"; // For now
 
   // Local state for products and form fields
   const [products, setProducts] = useState<Product[]>([]);
@@ -61,11 +64,17 @@ const CompleteInfoStep: React.FC = () => {
   };
 
   const calculateTotalPrice = (price: number, duration: number): string => {
-    return ((price * duration)/selectedOffer.duration).toFixed(2);
+    return ((price * duration) / selectedOffer.duration).toFixed(2);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = () => {
+    console.log('Form submitted in CompleteInfoStep');
+    
+    if (!startDate || !paymentMethod) {
+      alert('Please fill in all required fields');
+      return false;
+    }
+
     if (selectedOffer && selectedProductId) {
       const selectedProduct = products.find(p => p.id === selectedProductId);
       if (selectedProduct) {
@@ -82,13 +91,18 @@ const CompleteInfoStep: React.FC = () => {
           Origine: companyOrigin,
           paymentMethod,
           status: 'pending' as const,
-          
         };
-        dispatch(addAd(newAd));
-        // Navigate to next step or show success message
-        console.log('Ad created:', newAd);
+        
+        console.log('Submitting ad data:', newAd);
+        onAdDataSubmit(newAd);
+        return true;
+      } else {
+        console.error('Selected product not found');
       }
+    } else {
+      console.error('No offer or product selected');
     }
+    return false;
   };
 
   if (!selectedOffer) {
@@ -96,7 +110,7 @@ const CompleteInfoStep: React.FC = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: '20px', maxWidth: '300px', margin: 'auto' }}>
+    <div style={{ padding: '20px', maxWidth: '300px', margin: 'auto' }}>
       <h2>Complete Information for Selected Offer</h2>
       <div>
         <h2>PUBLICITÉ {selectedOffer.title} - {selectedOffer.subtitle}</h2>
@@ -155,24 +169,7 @@ const CompleteInfoStep: React.FC = () => {
           ))}
         </select>
       </div>
-
-      <button 
-        type="submit"
-        style={{ 
-          display: 'block', 
-          width: '100%', 
-          padding: '10px', 
-          backgroundColor: '#28a745', 
-          color: 'white', 
-          border: 'none', 
-          cursor: 'pointer', 
-          marginTop: '20px' 
-        }}
-      >
-        Create Ad
-      </button>
-    </form>
+    </div> // Closing the outermost div
   );
-};
-
-export default CompleteInfoStep;
+}
+export { CompleteInfoStep, type CompleteInfoStepProps };

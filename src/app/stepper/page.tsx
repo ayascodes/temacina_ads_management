@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useRef} from 'react';
 import { useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
@@ -9,10 +9,12 @@ import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ChooseOffer from '../components/choose_offer/page';
-import CompleteInfoStep from '../components/complete_infos/page';
+import { CompleteInfoStep, type CompleteInfoStepProps } from '../components/complete_infos/page';
 import ValidationStep from '../components/validation/page'; // Assuming similar structure for ValidationStep
 import PaymentStep from '../components/payment/page'; // Assuming similar structure for PaymentStep
-
+import { useDispatch } from 'react-redux';
+import { addAd } from '../components/features/ad/adSlice';
+import { RootState } from '../components/redux/store';
 
 const steps = ['Choose Offer', 'Complete Info', 'Validation', 'Payment'];
 
@@ -22,7 +24,8 @@ export default function HybridStepper() {
   const [adStatus, setAdStatus] = useState('pending');
   const [companyData, setCompanyData] = useState(null);
   const selectedOffer = useSelector((state: any) => state.offer.selectedOffer);
-
+  const dispatch = useDispatch();
+  const [adData, setAdData] = useState(null);
   useEffect(() => {
     const fetchCompanyData = async () => {
       const response = await fetch('/data/companyData.json');
@@ -61,13 +64,28 @@ export default function HybridStepper() {
       setActiveStep(step);
     }
   };
+  
 
-  const handleComplete = () => {
+
+/* ----------------*/
+const completeInfoRef = useRef<{ submitForm: () => boolean }>(null);
+const handleComplete = () => {
+  if (activeStep === 1) {
+    const isSubmitted = completeInfoRef.current?.handleSubmit();
+    if (isSubmitted) {
+      const newCompleted = { ...completed };
+      newCompleted[activeStep] = true;
+      setCompleted(newCompleted);
+      handleNext();
+    }
+  } else {
+    // Handle completion for other steps
     const newCompleted = { ...completed };
     newCompleted[activeStep] = true;
     setCompleted(newCompleted);
     handleNext();
-  };
+  }
+};
 
   const handleReset = () => {
     setActiveStep(0);
@@ -79,6 +97,13 @@ export default function HybridStepper() {
     setAdStatus('approved');
     const newCompleted = { ...completed, 2: true }; 
     setCompleted(newCompleted);
+  };
+
+  const handleAdData = (data) => {
+    console.log('Ad data received:', data);
+    setAdData(data);
+    dispatch(addAd(data));
+    console.log('addAd action dispatched');
   };
 
   return (
@@ -113,7 +138,14 @@ export default function HybridStepper() {
         ) : (
           <React.Fragment>
             <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-            {activeStep === 1 && <CompleteInfoStep />}
+            {activeStep === 1 && (
+              <CompleteInfoStep 
+                onAdDataSubmit={(data) => {
+                  console.log('Ad data received in HybridStepper:', data);
+                  dispatch(addAd(data));
+                }} 
+              />
+            )}
             {activeStep === 2 && <ValidationStep />}
             {activeStep === 3 && <PaymentStep />}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
@@ -126,21 +158,9 @@ export default function HybridStepper() {
                 Back
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
-              {activeStep === 2 ? (
-                adStatus === 'pending' ? (
-                  <Button onClick={() => alert('Redirecting to ads management dashboard')}>
-                    Check Ad Status
-                  </Button>
-                ) : (
-                  <Button onClick={handleNext}>
-                    Proceed to Payment
-                  </Button>
-                )
-              ) : (
-                <Button onClick={handleComplete}>
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                </Button>
-              )}
+              <Button onClick={handleComplete}>
+                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+              </Button>
             </Box>
           </React.Fragment>
         )}
@@ -151,4 +171,5 @@ export default function HybridStepper() {
         </Button>
       )}
     </Box>
-  );}
+  );
+}
