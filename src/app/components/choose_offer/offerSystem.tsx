@@ -1,6 +1,5 @@
 // File: components/choose_offer/offerSystem.ts
 import OfferCard from "../offer_card/page";
-
 type CompanyType = 'ordinaire' | 'artisanal' | 'startup';
 type Marche = 'algérien' | 'international';
 type Secteur = 'Industrie' | 'Agriculture' | 'Construction' | 'ITech';
@@ -191,27 +190,25 @@ export const generateOfferCards = (
 
   return pageOffers.flatMap(pageOffer => 
     pageOffer.placements.map(placement => {
-      // Determine placements array based on the page and company type
       const placementsArray = pageOffer.page === "Page Secteur" && companyType === 'ordinaire'
-        ? placement.rectangleIds.map(id => ({ id, color: placement.color })) // Use rectangle IDs and color for the sector
-        : [{ id: placement.id, color: '#FF561C' }]; // Default for other pages
+        ? placement.rectangleIds.map(id => ({ id, color: placement.color }))
+        : [{ id: placement.id, color: '#FF561C' }];
 
-      // Check if it's a "Plein page" to set the specific color for the rectangle
       if (placement.title.includes("Plein page")) {
-        placementsArray.push({ id: 'plein', color: '#FF561C' }); // Add the plein rectangle with the orange color
+        placementsArray.push({ id: 'plein', color: '#FF561C' });
       }
 
       return (
         <OfferCard
           key={`${pageOffer.page}-${placement.id}`}
-          title={placement.title} // Title without price unit
-          subtitle={placement.subtitle || pageOffer.page} // Subtitle includes the updated title for secteur page
-          price={placement.price} // Passing the price as a separate prop
-          priceUnit={getPriceUnit(origineEntreprise)} // New prop for price unit
-          duration={placement.duration} // Pass duration to OfferCard
-          durationUnit={placement.durationUnit || 'jours'} // Pass duration unit to OfferCard, default to 'jours'
+          title={placement.title}
+          subtitle={placement.subtitle || pageOffer.page}
+          price={placement.price}
+          priceUnit={getPriceUnit(origineEntreprise)}
+          duration={placement.duration}
+          durationUnit={placement.durationUnit || 'jours'}
           svgPath={pageOffer.svgPath}
-          placements={placementsArray} // Use the new placements array
+          placements={placementsArray}
         />
       );
     })

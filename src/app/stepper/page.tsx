@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -7,7 +8,11 @@ import StepLabel from '@mui/material/StepLabel';
 import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import ChooseOffer from '../components/choose_offer/page'; // Adjust the import based on your file structure
+import ChooseOffer from '../components/choose_offer/page';
+import CompleteInfoStep from '../components/complete_infos/page';
+import ValidationStep from '../components/validation/page'; // Assuming similar structure for ValidationStep
+import PaymentStep from '../components/payment/page'; // Assuming similar structure for PaymentStep
+
 
 const steps = ['Choose Offer', 'Complete Info', 'Validation', 'Payment'];
 
@@ -16,11 +21,11 @@ export default function HybridStepper() {
   const [completed, setCompleted] = useState<{ [k: number]: boolean }>({});
   const [adStatus, setAdStatus] = useState('pending');
   const [companyData, setCompanyData] = useState(null);
+  const selectedOffer = useSelector((state: any) => state.offer.selectedOffer);
 
   useEffect(() => {
-    // Simulating fetching data from a JSON file
     const fetchCompanyData = async () => {
-      const response = await fetch('/data/companyData.json'); // Adjust the path to your JSON file
+      const response = await fetch('/data/companyData.json');
       const data = await response.json();
       setCompanyData(data);
     };
@@ -28,6 +33,12 @@ export default function HybridStepper() {
     fetchCompanyData();
   }, []);
 
+  useEffect(() => {
+    // Move to next step when an offer is selected
+    if (selectedOffer && activeStep === 0) {
+      handleNext();
+    }
+  }, [selectedOffer]);
   const totalSteps = () => steps.length;
   const completedSteps = () => Object.keys(completed).length;
   const isLastStep = () => activeStep === totalSteps() - 1;
@@ -76,9 +87,7 @@ export default function HybridStepper() {
         {steps.map((label, index) => (
           <Step key={label}>
             <StepButton color="inherit" onClick={handleStep(index)}>
-              <StepLabel>
-                {label}
-              </StepLabel>
+              <StepLabel>{label}</StepLabel>
             </StepButton>
           </Step>
         ))}
@@ -86,10 +95,10 @@ export default function HybridStepper() {
       <div>
         {activeStep === 0 && companyData ? (
           <ChooseOffer 
-            companyType="ordinaire" // You can dynamically set this from companyData if needed
-            companyMarche="algérien" // Similarly, adjust as needed
-            companySecteur="Construction" // Adjust based on your JSON
-            origineEntreprise="algérienne" // Adjust as needed
+            companyType={companyData.type}
+            companyMarche={companyData.marche}
+            companySecteur={companyData.secteur}
+            origineEntreprise={companyData.origine}
           />
         ) : allStepsCompleted() ? (
           <React.Fragment>
@@ -104,6 +113,9 @@ export default function HybridStepper() {
         ) : (
           <React.Fragment>
             <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+            {activeStep === 1 && <CompleteInfoStep />}
+            {activeStep === 2 && <ValidationStep />}
+            {activeStep === 3 && <PaymentStep />}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Button
                 color="inherit"
@@ -139,5 +151,4 @@ export default function HybridStepper() {
         </Button>
       )}
     </Box>
-  );
-}
+  );}

@@ -2,11 +2,14 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import productReducer from '../features/product/productSlice';
+import offerReducer from '../features/offer/offerSlice'; // Import offer slice
+
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       product: productReducer,
+      offer: offerReducer,
     },
   });
 };
