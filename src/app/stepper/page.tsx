@@ -10,12 +10,76 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import Link from 'next/link';
+import { styled } from '@mui/material/styles';
+import Check from '@mui/icons-material/Check';
+import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
+import { StepIconProps } from '@mui/material/StepIcon';
 import ChooseOffer from '../components/choose_offer/page';
 import CompleteInfoStep from '../components/complete_infos/page';
 import ValidationStep from '../components/validation/page';
 import PaymentStep from '../components/payment/page';
 import { addAd } from '../components/features/ad/adSlice';
 import { RootState } from '../components/redux/store';
+
+const CustomConnector = styled(StepConnector)(({ theme }) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 10,
+    left: 'calc(-50% + 16px)',
+    right: 'calc(50% + 16px)',
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: '#FF561C',
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: '#FF561C',
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    borderColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
+    borderTopWidth: 3,
+    borderRadius: 1,
+  },
+}));
+
+const CustomStepIconRoot = styled('div')<{ ownerState: { active?: boolean } }>(
+  ({ theme, ownerState }) => ({
+    color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',
+    display: 'flex',
+    height: 22,
+    alignItems: 'center',
+    ...(ownerState.active && {
+      color: '#FF561C',
+    }),
+    '& .CustomStepIcon-completedIcon': {
+      color: '#FF561C',
+      zIndex: 1,
+      fontSize: 18,
+    },
+    '& .CustomStepIcon-circle': {
+      width: 8,
+      height: 8,
+      borderRadius: '50%',
+      backgroundColor: 'currentColor',
+    },
+  }),
+);
+
+function CustomStepIcon(props: StepIconProps) {
+  const { active, completed, className } = props;
+
+  return (
+    <CustomStepIconRoot ownerState={{ active }} className={className}>
+      {completed ? (
+        <Check className="CustomStepIcon-completedIcon" />
+      ) : (
+        <div className="CustomStepIcon-circle" />
+      )}
+    </CustomStepIconRoot>
+  );
+}
 
 const steps = ['Choose Offer', 'Complete Info', 'Validation', 'Payment'];
 
@@ -36,11 +100,12 @@ export default function HybridStepper() {
     duration: selectedOffer ? selectedOffer.duration : 5,
     paymentMethod: '',
   });
+  
   type Product = {
-  id: string;
-  name: string;
-  description: string;
-};
+    id: string;
+    name: string;
+    description: string;
+  };
   // Fetch company data from JSON
   useEffect(() => {
     const fetchCompanyData = async () => {
@@ -183,11 +248,11 @@ export default function HybridStepper() {
       <h1>Marketing Visuel  DA TTC/Jour</h1>
     </div>
     <Box className="StepperContainer" sx={{ width: '100%', p: 2 }}>
-      <Stepper activeStep={activeStep} alternativeLabel>
+      <Stepper activeStep={activeStep} alternativeLabel connector={<CustomConnector />}>
         {steps.map((label, index) => (
           <Step key={label}>
             <StepButton color="inherit" onClick={handleStep(index)} disabled={adCreated && index < activeStep}>
-              <StepLabel>{label}</StepLabel>
+              <StepLabel StepIconComponent={CustomStepIcon}>{label}</StepLabel>
             </StepButton>
           </Step>
         ))}
@@ -212,35 +277,47 @@ export default function HybridStepper() {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+            {/* {<Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>} */}
             {activeStep === 1 && <CompleteInfoStep formData={formData} setFormData={setFormData} />}
             {activeStep === 2 && (
               <>
-                {showAlert && (
-                  <Alert severity="success" onClose={() => setShowAlert(false)} sx={{ mb: 2 }}>
-                    Ad successfully created! It's waiting for admin approval.
-                    <Link href="/">
-                      <Button color="inherit" size="small">
-                        Go to Ad Management
-                      </Button>
-                    </Link>
-                  </Alert>
-                )}
+               {showAlert && (
+              <Alert
+                severity="success"
+                onClose={() => setShowAlert(false)}
+                sx={{ 
+                  mb: 2, 
+                  position: 'fixed',      // Fixed position
+                  bottom: 0,              // Stick to the bottom of the page
+                  left: 0,                // Align to the left
+                  right: 0,               // Align to the right (full width)
+                  zIndex: 1000            // Ensure it appears above other elements
+                }}
+              >
+                Ad successfully created! It's waiting for admin approval.
+                <Link href="/">
+                  <Button color="inherit" size="small">
+                    Retour à l'accueil
+                  </Button>
+                </Link>
+              </Alert>
+            )}
+
                 <ValidationStep />
               </>
             )}
             {activeStep === 3 && <PaymentStep />}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 2 }}>
               <Button
-                color="inherit"
+                className="backBtn"
                 disabled={activeStep === 0 || adCreated}
                 onClick={handleBack}
                 sx={{ mr: 1 }}
               >
-                Back
+                Retour
               </Button>
-              <Button onClick={handleNext}>
-                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+              <Button onClick={handleNext} className="nextBtn">
+                {activeStep === steps.length - 1 ? 'Fin' : 'Continuer'}
               </Button>
             </Box>
           </React.Fragment>
