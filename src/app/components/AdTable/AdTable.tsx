@@ -46,7 +46,7 @@ const AdTable = ({ ads = [] }) => {
                 </TableCell>
                 <TableCell style={{ padding: '40px' }} align="left">{ad.description}</TableCell>
                 <TableCell style={{ padding: '40px' }} align="left">{ad.commence_le}</TableCell>
-                <TableCell style={{ padding: '40px' }} align="left">{ad.duree}</TableCell>
+                <TableCell style={{ padding: '40px' }} align="left">{ad.duree} {ad.durationUnit}</TableCell>
                 <TableCell style={{ padding: '40px' }} align="left">{ad.origine_de_lentreprise}</TableCell>
                 <TableCell style={{ padding: '40px' }} align="left">{ad.montant_totale}</TableCell>
                 <TableCell style={{ padding: '40px' }} align="left"><StatusButton status={ad.status} /></TableCell>

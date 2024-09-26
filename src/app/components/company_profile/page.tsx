@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 function CompanyProfile() {
   const [companyData, setCompanyData] = useState(null);
-
+  type OrigineDeLEntreprise = 'algérienne' | 'internationale';
   useEffect(() => {
     async function fetchCompanyData() {
       try {
@@ -25,7 +25,9 @@ function CompanyProfile() {
   if (!companyData) {
     return <p>Loading...</p>;
   }
-
+  const getPaymentUnit = (origine: OrigineDeLEntreprise): string => {
+    return origine === 'algérienne' ? 'Dinar algerian DZD' : 'Dolar USD';
+  };
   const { sectors, markets, currencies, company } = companyData;
 
   return (
@@ -118,7 +120,7 @@ function CompanyProfile() {
             <div className="cardLine">
             <h3>Origine de votre entreprise :</h3>
             <div>
-                <p>{company.origin} - votre payment est en {company.selectedCurrency}</p>
+                <p>{company.origin} - votre payment est en {getPaymentUnit(company.origin)}</p>
             </div>
             </div>
         </>

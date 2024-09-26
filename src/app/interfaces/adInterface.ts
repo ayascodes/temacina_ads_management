@@ -8,7 +8,8 @@ export interface Ad {
   offerSubtitle: string; // From offer state
   description?: string; // Concatenated description
   commence_le: string; // From current step
-  duree: number; // From current step
+  duree: number;
+  durationUnit:string // From current step
   montant_totale:string; //to be calculated
   origine_de_lentreprise:string; // From company infos
   paymentMethod: string; // From current step

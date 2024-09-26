@@ -23,6 +23,7 @@ export default function HybridStepper() {
   const [companyData, setCompanyData] = useState(null);
   const selectedOffer = useSelector((state: any) => state.offer.selectedOffer);
 
+  // Fetch company data from JSON
   useEffect(() => {
     const fetchCompanyData = async () => {
       const response = await fetch('/data/companyData.json');
@@ -31,8 +32,10 @@ export default function HybridStepper() {
     };
     
     fetchCompanyData();
+  }, []); 
 
-    // Retrieve saved progress from localStorage
+  // Retrieve saved progress from localStorage on initial mount
+  useEffect(() => {
     const savedStep = localStorage.getItem('activeStep');
     const savedCompleted = localStorage.getItem('completedSteps');
     const savedAdStatus = localStorage.getItem('adStatus');
@@ -40,10 +43,10 @@ export default function HybridStepper() {
     if (savedStep) setActiveStep(parseInt(savedStep));
     if (savedCompleted) setCompleted(JSON.parse(savedCompleted));
     if (savedAdStatus) setAdStatus(savedAdStatus);
-  }, []);
-
+  }, []); // Empty dependency array ensures this runs only once on mount
+  
+  // Save progress to localStorage whenever it changes
   useEffect(() => {
-    // Save progress to localStorage whenever it changes
     localStorage.setItem('activeStep', activeStep.toString());
     localStorage.setItem('completedSteps', JSON.stringify(completed));
     localStorage.setItem('adStatus', adStatus);
@@ -101,6 +104,7 @@ export default function HybridStepper() {
     const newCompleted = { ...completed, 2: true }; 
     setCompleted(newCompleted);
   };
+
   return (
     <Box sx={{ width: '100%' }}>
       <Stepper activeStep={activeStep} alternativeLabel>
@@ -115,10 +119,10 @@ export default function HybridStepper() {
       <div>
         {activeStep === 0 && companyData ? (
           <ChooseOffer 
-            companyType={companyData.type}
-            companyMarche={companyData.marche}
-            companySecteur={companyData.secteur}
-            origineEntreprise={companyData.origine}
+            companyType={companyData.company.Type}
+            companyMarche={companyData.company.selectedMarket}
+            companySecteur={companyData.company.selectedSectors}
+            origineEntreprise={companyData.company.origin}
           />
         ) : allStepsCompleted() ? (
           <React.Fragment>
@@ -148,7 +152,6 @@ export default function HybridStepper() {
               <Box sx={{ flex: '1 1 auto' }} />
               {activeStep === 2 ? (
                 adStatus === 'pending' ? (
-                  
                   <Link href="/">Check Ad Status</Link>
                 ) : (
                   <Button onClick={handleNext}>
@@ -170,6 +173,5 @@ export default function HybridStepper() {
         </Button>
       )}
     </Box>
-  );}{/* <Button onClick={() => alert('Redirecting to ads management dashboard')}>
-    Check Ad Status
-  </Button> */}
+  );
+}
