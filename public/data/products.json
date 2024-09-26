@@ -1,92 +1,50 @@
 [
   {
     "id": 1,
-    "name": "Frozen yoghurt",
-    "secteur": "Food",
-    "categorie": "Desserts",
-    "sousCategorie": "Yoghurts",
-    "prix": "$4.00",
-    "status": "Approved"
+    "name": "Machine d'assemblage",
+    "secteur": "Industrie",
+    "categorie": "Industrie mécanique et de chaudronnerie",
+    "sousCategorie": "Chaudronnerie et Charpente",
+    "prix": "500 - 1000 DZD",
+    "status": "Approved",
+    "description":"Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum dignissimos, neque magnam excepturi natus, hic eligendi",
+    "marcheVise":"algérien",
+    "quantite":"80"
   },
   {
     "id": 2,
-    "name": "Ice cream sandwich",
-    "secteur": "Food",
-    "categorie": "Desserts",
-    "sousCategorie": "Ice Cream",
-    "prix": "$5.50",
-    "status": "Pending"
+    "name": "Fibre-Link 2 port",
+    "secteur": "ITech",
+    "categorie": "Réseaux et Communication",
+    "sousCategorie": "Accessoire",
+    "prix": "500 - 1000 DZD",
+    "status": "Pending",
+    "description":"Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum dignissimos, neque magnam excepturi natus, hic eligendi",
+    "marcheVise":"algérien",
+    "quantite":"80"
   },
   {
     "id": 3,
-    "name": "Eclair",
-    "secteur": "Bakery",
-    "categorie": "Pastry",
-    "sousCategorie": "Eclair",
-    "prix": "$3.00",
-    "status": "Rejected"
+    "name": "Colorful Handcrafted Clay Cups",
+    "secteur": "Industrie",
+    "categorie": "Industrie artisanale",
+    "sousCategorie": "Poterie",
+    "prix": "100 - 400 DZD",
+    "status": "Rejected",
+    "description":"Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum dignissimos, neque magnam excepturi natus, hic eligendi",
+    "marcheVise":"algérien",
+    "quantite":"80"
   },
   {
     "id": 4,
-    "name": "Cupcake",
-    "secteur": "Bakery",
-    "categorie": "Pastry",
-    "sousCategorie": "Cupcake",
-    "prix": "$2.75",
-    "status": "Edited"
-  },
-  {
-    "id": 5,
-    "name": "Gingerbread",
-    "secteur": "Food",
-    "categorie": "Snacks",
-    "sousCategorie": "Cookies",
-    "prix": "$4.50",
-    "status": "Approved"
-  },
-  {
-    "id": 6,
-    "name": "Gingerbread",
-    "secteur": "Food",
-    "categorie": "Snacks",
-    "sousCategorie": "Cookies",
-    "prix": "$4.50",
-    "status": "Approved"
-  },
-  {
-    "id": 7,
-    "name": "Gingerbread",
-    "secteur": "Food",
-    "categorie": "Snacks",
-    "sousCategorie": "Cookies",
-    "prix": "$4.50",
-    "status": "Approved"
-  },
-  {
-    "id": 8,
-    "name": "Gingerbread",
-    "secteur": "Food",
-    "categorie": "Snacks",
-    "sousCategorie": "Cookies",
-    "prix": "$4.50",
-    "status": "Approved"
-  },
-  {
-    "id": 9,
-    "name": "Gingerbread",
-    "secteur": "Food",
-    "categorie": "Snacks",
-    "sousCategorie": "Cookies",
-    "prix": "$4.50",
-    "status": "Approved"
-  },
-  {
-    "id": 10,
-    "name": "Gingerbread",
-    "secteur": "Food",
-    "categorie": "Snacks",
-    "sousCategorie": "Cookies",
-    "prix": "$4.50",
-    "status": "Approved"
+    "name": "Téléphone portable intelligent de bureau",
+    "secteur": "ITech",
+    "categorie": "Réseaux et Communication",
+    "sousCategorie": "Accessoire",
+    "prix": "500 - 1000 DZD",
+    "status": "Edited",
+    "description":"Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum dignissimos, neque magnam excepturi natus, hic eligendi",
+    "marcheVise":"algérien",
+    "quantite":"80"
   }
-]
+  ]

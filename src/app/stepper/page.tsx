@@ -178,7 +178,11 @@ export default function HybridStepper() {
     setCompleted(newCompleted);
   };
   return (
-    <Box sx={{ width: '100%', p: 2 }}>
+    <>
+    <div className="marketin_visual_title">
+      <h1>Marketing Visuel  DA TTC/Jour</h1>
+    </div>
+    <Box className="StepperContainer" sx={{ width: '100%', p: 2 }}>
       <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={label}>
@@ -243,5 +247,6 @@ export default function HybridStepper() {
         )}
       </Box>
     </Box>
+    </>
   );  
 }
