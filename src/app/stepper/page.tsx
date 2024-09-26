@@ -10,9 +10,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ChooseOffer from '../components/choose_offer/page';
 import CompleteInfoStep from '../components/complete_infos/page';
-import ValidationStep from '../components/validation/page'; // Assuming similar structure for ValidationStep
-import PaymentStep from '../components/payment/page'; // Assuming similar structure for PaymentStep
-
+import ValidationStep from '../components/validation/page';
+import PaymentStep from '../components/payment/page';
+import Link from 'next/link';
 
 const steps = ['Choose Offer', 'Complete Info', 'Validation', 'Payment'];
 
@@ -31,7 +31,23 @@ export default function HybridStepper() {
     };
     
     fetchCompanyData();
+
+    // Retrieve saved progress from localStorage
+    const savedStep = localStorage.getItem('activeStep');
+    const savedCompleted = localStorage.getItem('completedSteps');
+    const savedAdStatus = localStorage.getItem('adStatus');
+
+    if (savedStep) setActiveStep(parseInt(savedStep));
+    if (savedCompleted) setCompleted(JSON.parse(savedCompleted));
+    if (savedAdStatus) setAdStatus(savedAdStatus);
   }, []);
+
+  useEffect(() => {
+    // Save progress to localStorage whenever it changes
+    localStorage.setItem('activeStep', activeStep.toString());
+    localStorage.setItem('completedSteps', JSON.stringify(completed));
+    localStorage.setItem('adStatus', adStatus);
+  }, [activeStep, completed, adStatus]);
 
   useEffect(() => {
     // Move to next step when an offer is selected
@@ -39,6 +55,7 @@ export default function HybridStepper() {
       handleNext();
     }
   }, [selectedOffer]);
+
   const totalSteps = () => steps.length;
   const completedSteps = () => Object.keys(completed).length;
   const isLastStep = () => activeStep === totalSteps() - 1;
@@ -73,6 +90,10 @@ export default function HybridStepper() {
     setActiveStep(0);
     setCompleted({});
     setAdStatus('pending');
+    // Clear localStorage when resetting
+    localStorage.removeItem('activeStep');
+    localStorage.removeItem('completedSteps');
+    localStorage.removeItem('adStatus');
   };
 
   const handleAdApproval = () => {
@@ -80,7 +101,6 @@ export default function HybridStepper() {
     const newCompleted = { ...completed, 2: true }; 
     setCompleted(newCompleted);
   };
-
   return (
     <Box sx={{ width: '100%' }}>
       <Stepper activeStep={activeStep} alternativeLabel>
@@ -128,9 +148,8 @@ export default function HybridStepper() {
               <Box sx={{ flex: '1 1 auto' }} />
               {activeStep === 2 ? (
                 adStatus === 'pending' ? (
-                  <Button onClick={() => alert('Redirecting to ads management dashboard')}>
-                    Check Ad Status
-                  </Button>
+                  
+                  <Link href="/">Check Ad Status</Link>
                 ) : (
                   <Button onClick={handleNext}>
                     Proceed to Payment
@@ -151,4 +170,6 @@ export default function HybridStepper() {
         </Button>
       )}
     </Box>
-  );}
+  );}{/* <Button onClick={() => alert('Redirecting to ads management dashboard')}>
+    Check Ad Status
+  </Button> */}

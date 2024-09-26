@@ -71,17 +71,17 @@ const CompleteInfoStep: React.FC = () => {
       if (selectedProduct) {
         const newAd = {
           productId: selectedProductId,
-          productName: selectedProduct.name,
+          type_de_publicite: selectedProduct.name,
           offerId: selectedOffer.id,
           offerTitle: selectedOffer.title,
           offerSubtitle: selectedOffer.subtitle,
           description: `${selectedOffer.title} ${selectedOffer.subtitle}`.trim(),
-          startDate,
-          duration,
-          TotalPrice: calculateTotalPrice(selectedOffer.price, duration),
-          Origine: companyOrigin,
+          commence_le:startDate,
+          duree:duration,
+          montant_totale: calculateTotalPrice(selectedOffer.price, duration),
+          origine_de_lentreprise: companyOrigin,
           paymentMethod,
-          status: 'pending' as const,
+          status: 'Pending' , 
           
         };
         dispatch(addAd(newAd));

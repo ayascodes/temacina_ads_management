@@ -8,13 +8,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import EditIcon from '@mui/icons-material/Edit';
-import ArchiveIcon from '@mui/icons-material/Archive';
 import DeleteIcon from '@mui/icons-material/Delete';    
-import AdsClickIcon from '@mui/icons-material/AdsClick';
 import Link from 'next/link';
 import StatusButton from '../status/status';
 import PaymentIcon from '@mui/icons-material/Payment';
-import { Padding } from '@mui/icons-material';
 
 const AdTable = ({ ads = [] }) => {
   if (!Array.isArray(ads) || ads.length === 0) {
@@ -26,7 +23,7 @@ const AdTable = ({ ads = [] }) => {
       <Table sx={{ minWidth: 600 }} className='table'>
         <TableHead>
           <TableRow>
-            <TableCell className='TableHead' >Type</TableCell>
+            <TableCell className='TableHead'>Type</TableCell>
             <TableCell className='TableHead' align="left">Description</TableCell>
             <TableCell className='TableHead' align="left">Commence le</TableCell>
             <TableCell className='TableHead' align="left">Duré</TableCell>
@@ -47,13 +44,13 @@ const AdTable = ({ ads = [] }) => {
                 <TableCell component="th" scope="row">
                   {ad.type_de_publicite}
                 </TableCell>
-                <TableCell style={{ padding : '40px'  }} align="left">{ad.description}</TableCell>
-                <TableCell style={{ padding : '40px'  }}align="left">{ad.commence_le}</TableCell>
-                <TableCell style={{ padding : '40px'  }}align="left">{ad.duree}</TableCell>
-                <TableCell style={{ padding : '40px'  }}align="left">{ad.origine_de_lentreprise}</TableCell>
-                <TableCell style={{ padding : '40px'  }}align="left">{ad.montant_totale}</TableCell>
-                <TableCell style={{ padding : '40px'  }}align="left"><StatusButton status={ad.status} /></TableCell>
-                <TableCell style={{ padding : '40px'  }}align="center" >
+                <TableCell style={{ padding: '40px' }} align="left">{ad.description}</TableCell>
+                <TableCell style={{ padding: '40px' }} align="left">{ad.commence_le}</TableCell>
+                <TableCell style={{ padding: '40px' }} align="left">{ad.duree}</TableCell>
+                <TableCell style={{ padding: '40px' }} align="left">{ad.origine_de_lentreprise}</TableCell>
+                <TableCell style={{ padding: '40px' }} align="left">{ad.montant_totale}</TableCell>
+                <TableCell style={{ padding: '40px' }} align="left"><StatusButton status={ad.status} /></TableCell>
+                <TableCell style={{ padding: '40px' }} align="center">
                   <div style={{ 
                       display: 'flex',  
                       justifyItems: 'center',
@@ -65,8 +62,20 @@ const AdTable = ({ ads = [] }) => {
                     <Link href={`/delete/${ad.id}`} onClick={(e) => e.stopPropagation()}>
                       <DeleteIcon style={{ color: 'black' }} />
                     </Link>
-                    <Link href={`/PaymentIcon/${ad.id}`} onClick={(e) => e.stopPropagation()}>
-                      <PaymentIcon style={{ color: 'black' }} />
+                    <Link 
+                      href={ad.status === 'Approved' ? `/PaymentIcon/${ad.id}` : '#'}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (ad.status !== 'Approved') {
+                          e.preventDefault();
+                        }
+                      }}
+                      style={{
+                        pointerEvents: ad.status === 'Approved' ? 'auto' : 'none',
+                        opacity: ad.status === 'Approved' ? 1 : 0.5,
+                      }}
+                    >
+                      <PaymentIcon style={{ color: ad.status === 'Approved' ? 'black' : 'grey' }} />
                     </Link>
                   </div>
                 </TableCell>

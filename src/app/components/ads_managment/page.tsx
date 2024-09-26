@@ -1,50 +1,37 @@
-// AdList.js
-"use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store'; // Adjust the import path as needed
 import AdTable from '../AdTable/AdTable';
 import Filtre from '../filter/page'; // Import the Filtre component
 
-const AdList = () => {
-  const [ads, setAds] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+interface Ad {
+  status: string;
+  type_de_publicite: string;
+  // Add other properties as needed
+}
+
+const AdList: React.FC = () => {
+  const ads = useSelector((state: RootState) => state.ad.ads);
+
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [selectedType, setSelectedType] = useState<string[]>([]);
 
   const statusOptions = ['Approved', 'Pending', 'Rejected', 'Expired'];
-  const typeOptions = ['Mega Haut Slide', 'Nom de Produit'];
+  const typeOptions = ['Mega Haut Slide', 'Product'];
 
-  const [selectedStatus, setSelectedStatus] = useState([]);
-  const [selectedType, setSelectedType] = useState([]);
-
-  useEffect(() => {
-    const fetchAds = async () => {
-      try {
-        const response = await fetch('/data/ads.json');
-        if (!response.ok) {
-          throw new Error('Failed to fetch');
-        }
-        const data = await response.json();
-        setAds(data.ads);
-        setLoading(false);
-      } catch (err) {
-        setError('Failed to load ads. Please try again later.');
-        setLoading(false);
-      }
-    };
-
-    fetchAds();
-  }, []);
-
-  const filteredAds = ads.filter((ad) => {
+  const filteredAds = ads.filter((ad: Ad) => {
     const statusMatch = selectedStatus.length === 0 || selectedStatus.includes(ad.status);
-    const typeMatch = selectedType.length === 0 || selectedType.includes(ad.type_de_publicite.split(':')[0].trim());
+    const adType = ad.type_de_publicite.split(':')[0].trim();
+    const typeMatch = selectedType.length === 0 || 
+      (adType === 'Mega Haut Slide' && selectedType.includes('Mega Haut Slide')) ||
+      (adType !== 'Mega Haut Slide' && selectedType.includes('Product'));
     return statusMatch && typeMatch;
   });
 
-  if (loading) return <div className="loading-message">Loading...</div>;
-  if (error) return <div className="error-message">{error}</div>;
-
   return (
     <div className="ad-list p-4">
+      <h1>Ad List</h1>
+      
       <Filtre
         title="Status Filter"
         options={statusOptions}
@@ -58,13 +45,11 @@ const AdList = () => {
         onChange={setSelectedType}
       />
 
-      <div className="filtered-ads mt-6">
-        {filteredAds.length > 0 ? (
-          <AdTable ads={filteredAds} className="ad-table" />
-        ) : (
-          <p className="no-ads-message text-gray-500">No ads match the selected filters.</p>
-        )}
-      </div>
+      {filteredAds.length === 0 ? (
+        <p className="no-ads-message text-gray-500">No ads match the selected filters.</p>
+      ) : (
+        <AdTable ads={filteredAds} className="ad-table" />
+      )}
     </div>
   );
 };

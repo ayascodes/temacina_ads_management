@@ -3,13 +3,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import productReducer from '../features/product/productSlice';
 import offerReducer from '../features/offer/offerSlice'; // Import offer slice
-
+import adSliceReducer from '../features/ad/adSlice';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       product: productReducer,
       offer: offerReducer,
+      ad: adSliceReducer, // Import ad slice here,
     },
   });
 };
