@@ -29,6 +29,7 @@ export default function HybridStepper() {
   const selectedOffer = useSelector((state: RootState) => state.offer.selectedOffer);
   const selectedProductId = useSelector((state: RootState) => state.product.selectedProductId);
   const [products, setProducts] = useState<Product[]>([]);
+  const [adCreated, setAdCreated] = useState(false);
 
   const [formData, setFormData] = useState({
     startDate: '',
@@ -133,6 +134,7 @@ export default function HybridStepper() {
       dispatch(addAd(newAd));
       setShowAlert(true);
       setActiveStep(2); // Move to Validation step
+      setAdCreated(true); // Set adCreated to true after creating the ad
     }
   };
 
@@ -141,14 +143,17 @@ export default function HybridStepper() {
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    if (!adCreated) {
+      setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    }
   };
 
   const handleStep = (step: number) => () => {
-    if (completed[step - 1] || step === activeStep) {
+    if (!adCreated && (completed[step - 1] || step === activeStep)) {
       setActiveStep(step);
     }
   };
+
 
   const handleComplete = () => {
     const newCompleted = { ...completed };
@@ -172,19 +177,18 @@ export default function HybridStepper() {
     const newCompleted = { ...completed, 2: true }; 
     setCompleted(newCompleted);
   };
-
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', p: 2 }}>
       <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={label}>
-            <StepButton color="inherit" onClick={handleStep(index)}>
+            <StepButton color="inherit" onClick={handleStep(index)} disabled={adCreated && index < activeStep}>
               <StepLabel>{label}</StepLabel>
             </StepButton>
           </Step>
         ))}
       </Stepper>
-      <div>
+      <Box sx={{ p: 3 }}>
         {activeStep === 0 && companyData ? (
           <ChooseOffer 
             companyType={companyData.company.Type}
@@ -195,7 +199,7 @@ export default function HybridStepper() {
         ) : allStepsCompleted() ? (
           <React.Fragment>
             <Typography sx={{ mt: 2, mb: 1 }}>
-              All steps completed - you&apos;re finished
+              All steps completed - you're finished
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Box sx={{ flex: '1 1 auto' }} />
@@ -209,7 +213,7 @@ export default function HybridStepper() {
             {activeStep === 2 && (
               <>
                 {showAlert && (
-                  <Alert severity="success" onClose={() => setShowAlert(false)}>
+                  <Alert severity="success" onClose={() => setShowAlert(false)} sx={{ mb: 2 }}>
                     Ad successfully created! It's waiting for admin approval.
                     <Link href="/">
                       <Button color="inherit" size="small">
@@ -222,23 +226,22 @@ export default function HybridStepper() {
               </>
             )}
             {activeStep === 3 && <PaymentStep />}
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 2 }}>
               <Button
                 color="inherit"
-                disabled={activeStep === 0}
+                disabled={activeStep === 0 || adCreated}
                 onClick={handleBack}
                 sx={{ mr: 1 }}
               >
                 Back
               </Button>
-              <Box sx={{ flex: '1 1 auto' }} />
               <Button onClick={handleNext}>
                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
               </Button>
             </Box>
           </React.Fragment>
         )}
-      </div>
+      </Box>
     </Box>
-  );
+  );  
 }
