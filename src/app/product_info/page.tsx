@@ -21,6 +21,7 @@ interface Product {
 function ProductDetailPage() {
     const selectedProductId = useAppSelector(state => state.product.selectedProductId);
     const [product, setProduct] = useState<Product | null>(null);
+    const [companyData, setCompanyData] = useState(null);
   
     useEffect(() => {
       async function fetchProductData() {
@@ -53,6 +54,32 @@ function ProductDetailPage() {
       fetchProductData();
     }, [selectedProductId]); 
     console.log('hiiiiiiiiiiiiiiiiiiiii',selectedProductId);
+
+    const [priceUnit, setPriceUnit] = useState('');
+
+  useEffect(() => {
+    async function fetchCompanyData() {
+      try {
+        const response = await fetch('/data/companyData.json');
+        const data = await response.json();
+        setCompanyData(data);
+
+        // Get selectedMarket from the fetched company data
+        const selectedMarket = data.company.selectedMarket;
+
+        // Set price unit based on selected market
+        if (selectedMarket === 'algérien') {
+          setPriceUnit('DZD');
+        } else {
+          setPriceUnit('USD');
+        }
+      } catch (error) {
+        console.error('Error fetching company data:', error);
+      }
+    }
+
+    fetchCompanyData();
+  }, []);
 
   if (!selectedProductId) {
     return <Typography variant="h6">No product selected. Please go back and select a product.</Typography>;
@@ -104,7 +131,7 @@ function ProductDetailPage() {
                 </div>
                 <div className="cardLine">
                   <h3>Prix   :</h3>
-                  <p>{product.prix}</p>
+                  <p>{product.prix} {priceUnit}</p>
                 </div>
                 <div className="cardLine">
                   <h3>Quantité   :</h3>

@@ -412,6 +412,14 @@ width: 300px; /* Set a fixed width for alignment */
 .validationContainer{
   font-family: poppins;
 }
+.tableRowRejected {
+  opacity: 0.5;
+}
+
+a[style*="pointer-events: none"] {
+  cursor: default;
+}
+
 
 /* .poppins-thin {
   font-family: "Poppins", sans-serif;

@@ -78,16 +78,61 @@ function AdsCreation() {
     fetchProductData();
   }, []);
 
-  const handleCheckboxChange = (productId: string) => {
-    if (selectedProductId === productId) {
-      dispatch(selectProduct(null)); // Unselect the product
-    } else {
-      dispatch(selectProduct(productId)); // Select a new product
+  const handleCheckboxChange = (productId, status) => {
+    if (status !== 'Rejected') {
+      if (selectedProductId === productId) {
+        dispatch(selectProduct(null));
+      } else {
+        dispatch(selectProduct(productId));
+      }
     }
   };
 
-  const handleProductAdClick = (productId: string) => {
-    dispatch(selectProduct(productId)); // Select the product
+  const handleProductAdClick = (productId, status) => {
+    if (status !== 'Rejected') {
+      dispatch(selectProduct(productId));
+    }
+  };
+
+  const isProductRejected = (productId) => {
+    const product = products.find(p => p.id === productId);
+    return product && product.status === 'Rejected';
+  };
+
+  const renderActionIcons = (product) => {
+    const isRejected = product.status === 'Rejected';
+    const iconStyle = { color: isRejected ? 'gray' : 'black', cursor: isRejected ? 'not-allowed' : 'pointer' };
+    const linkStyle = { pointerEvents: isRejected ? 'none' : 'auto' };
+
+
+  
+    return (
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gridTemplateRows: 'repeat(2, auto)',
+        gap: '10px',
+        justifyItems: 'center',
+        alignItems: 'center',
+      }}>
+        <Link href={isRejected ? '#' : "/edit"} style={linkStyle}>
+          <EditIcon style={iconStyle} />
+        </Link>
+        <Link href={isRejected ? '#' : "/archive"} style={linkStyle}>
+          <ArchiveIcon style={iconStyle} />
+        </Link>
+        <Link href={isRejected ? '#' : "/delete"} style={linkStyle}>
+          <DeleteIcon style={iconStyle} />
+        </Link>
+        <Link 
+          href={isRejected ? '#' : `/product_info`}
+          onClick={() => !isRejected && handleProductAdClick(product.id)}
+          style={linkStyle}
+        >
+          <AdsClickIcon style={iconStyle} />
+        </Link>
+      </div>
+    );
   };
 
   return (
@@ -114,13 +159,14 @@ function AdsCreation() {
                   tableRow 
                   ${selectedProductId !== null && selectedProductId !== product.id ? 'tableRowDisabled' : ''} 
                   ${selectedProductId === product.id ? 'tableRowSelected' : ''}
+                  ${product.status === 'Rejected' ? 'tableRowRejected' : ''}
                 `}
               >
                 <TableCell>
                   <Checkbox
                     checked={selectedProductId === product.id}
-                    onChange={() => handleCheckboxChange(product.id)}
-                    disabled={selectedProductId !== null && selectedProductId !== product.id}
+                    onChange={() => handleCheckboxChange(product.id, product.status)}
+                    disabled={selectedProductId !== null && selectedProductId !== product.id || product.status === 'rejected'}
                   />
                 </TableCell>
                 <TableCell>{product.name}</TableCell>
@@ -130,30 +176,7 @@ function AdsCreation() {
                 <TableCell>{product.prix} {priceUnit}</TableCell>
                 <TableCell align="left"><StatusButton status={product.status} /></TableCell>
                 <TableCell align="center" sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-                  <div style={{ 
-                      display: 'grid', 
-                      gridTemplateColumns: 'repeat(2, 1fr)',
-                      gridTemplateRows: 'repeat(2, auto)',
-                      gap: '10px',
-                      justifyItems: 'center',
-                      alignItems: 'center',
-                  }}>
-                    <Link href="/edit">
-                      <EditIcon style={{ color: 'black' }} />
-                    </Link>
-                    <Link href="/archive">
-                      <ArchiveIcon style={{ color: 'black' }} />
-                    </Link>
-                    <Link href="/delete">
-                      <DeleteIcon style={{ color: 'black' }} />
-                    </Link>
-                    <Link 
-                      href={`/product_info`} 
-                      onClick={() => handleProductAdClick(product.id)}
-                    >
-                      <AdsClickIcon style={{ color: 'black' }} />
-                    </Link>
-                  </div>
+                  {renderActionIcons(product)}
                 </TableCell>
               </TableRow>
             ))}
@@ -162,10 +185,14 @@ function AdsCreation() {
       </TableContainer>
       <Container className='AdsCreationContainer'>
         <div className='AdsCreationButton'>
-            <h3>Créer une publicite <span className="highlight">Mega Slide Haut</span></h3>
+          <h3>Créer une publicite <span className="highlight">Mega Slide Haut</span></h3>
         </div>
-        <Link href={`/product_info`} onClick={() => handleProductAdClick(selectedProductId)}>
-          <div className='AdsCreationButton'>
+        <Link 
+          href={!isProductRejected(selectedProductId) ? `/product_info` : '#'}
+          onClick={() => !isProductRejected(selectedProductId) && handleProductAdClick(selectedProductId)}
+          style={{ pointerEvents: isProductRejected(selectedProductId) ? 'none' : 'auto' }}
+        >
+          <div className='AdsCreationButton' style={{ opacity: isProductRejected(selectedProductId) ? 0.5 : 1 }}>
             <h3>Procéder avec <span className="highlight">le Produit selectionné</span></h3>
           </div>
         </Link>
