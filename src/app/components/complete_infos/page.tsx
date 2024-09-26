@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
-
+import { Container, Paper } from '@mui/material';
 type Product = {
   id: string;
   name: string;
@@ -67,67 +67,88 @@ const CompleteInfoStep: React.FC<CompleteInfoStepProps> = ({ formData, setFormDa
     return <p>Please select an offer before proceeding.</p>;
   }
 
+  const calculateTotalPrice = (price: number, duration: number): string => {
+    return ((price * duration) / selectedOffer.duration).toFixed(2);
+  };
   return (
-    <div style={{ padding: '20px', maxWidth: '300px', margin: 'auto' }}>
-      <h2>Complete Information for Selected Offer</h2>
-      <div>
-        <h2>PUBLICITÉ {selectedOffer.title} - {selectedOffer.subtitle}</h2>
+    <>
+    <Container className="productInfoContainer" maxWidth="xl">
+      <Paper className="paper2" elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
+    
+      
+      <div className='CompleteInfoText'>
+        <h1>Publicité <span className='highlight'> {selectedOffer.title} - {selectedOffer.subtitle}</span></h1>
+      {selectedProductName ? (
+        <h3>{selectedProductName}</h3>
+      ) : (
+        <h3>No Product Selected</h3>
+      )}
       </div>
 
-      {selectedProductName ? (
-        <h1>Selected Product: {selectedProductName}</h1>
-      ) : (
-        <h1>No Product Selected</h1>
-      )}
 
-      <div style={{ marginBottom: '15px' }}>
-        <label htmlFor="start-date">Start Date:</label>
+      <div className='CompleteInfoInputContainer'>
+        <label className='label'>Commance le:</label>
         <input 
+           id="date"
           type="date" 
-          id="start-date" 
           value={formData.startDate} 
           onChange={handleDateChange}
-          style={{ display: 'block', width: '100%', padding: '8px', marginTop: '5px' }}
           required
+          className='CompleteInfoInput'
+          placeholder="Date de debut"
         />
       </div>
 
-      <div style={{ marginBottom: '15px' }}>
-        <label htmlFor="duration">Duration {selectedOffer.durationUnit}:</label>
-        <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px' }}>
+      <div className='CompleteInfoInputContainer'>
+          <label className='label' htmlFor="duration">La durée :</label>
+          <div className="whatever">
           <input 
-            type="number" 
+            type="text" 
             id="duration" 
-            value={formData.duration} 
+            value={`${selectedOffer.duration} ${selectedOffer.durationUnit}`}
             readOnly 
-            style={{ padding: '8px', width: '70%', marginRight: '5px' }} 
+            className='CompleteInfoInput'
           />
           <button 
             type="button" 
             onClick={handleDurationIncrease}
-            style={{ padding: '8px', backgroundColor: '#007bff', color: 'white', border: 'none', cursor: 'pointer' }}
+            id='counterBtn'
           >
             +5
           </button>
-        </div>
+          </div>
+        
       </div>
 
-      <div style={{ marginBottom: '15px' }}>
-        <label htmlFor="payment-method">Payment Method:</label>
+      <div className='CompleteInfoInputContainer'>
+        <label className='label' htmlFor="payment-method">Mehthode de paiement :</label>
         <select 
           id="payment-method" 
           value={formData.paymentMethod} 
           onChange={handlePaymentMethodChange}
-          style={{ display: 'block', width: '100%', padding: '8px', marginTop: '5px' }}
+          style={{background:"#ffffff"}}
           required
+          className='CompleteInfoInput'
         >
-          <option value="" disabled>Select payment method</option>
+          <option value="" disabled>Selectionnez une methode de paiement</option>
           {paymentMethods.map((method, index) => (
             <option key={index} value={method}>{method}</option>
           ))}
         </select>
       </div>
-    </div>
+      <div className='CompleteInfoInputContainer'>
+        <label className='label' htmlFor="Total-price">Montant total :</label>
+        <input 
+              type="text" 
+              id="price" 
+              value={`${calculateTotalPrice(selectedOffer.price, formData.duration)} ${selectedOffer.priceUnit}`}
+              readOnly 
+              className='CompleteInfoInput'
+            />
+      </div>
+    </Paper>
+    </Container>
+    </>
   );
 };
 

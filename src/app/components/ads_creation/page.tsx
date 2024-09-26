@@ -23,7 +23,7 @@ function AdsCreation() {
   const dispatch = useAppDispatch();
   const selectedProductId = useAppSelector(state => state.product.selectedProductId);
   const [products, setProducts] = useState([]);
-
+  const [companyData, setCompanyData] = useState(null);
   const theme = createTheme({
     components: {
       MuiCheckbox: {
@@ -38,6 +38,31 @@ function AdsCreation() {
       },
     },
   });
+  const [priceUnit, setPriceUnit] = useState('');
+
+  useEffect(() => {
+    async function fetchCompanyData() {
+      try {
+        const response = await fetch('/data/companyData.json');
+        const data = await response.json();
+        setCompanyData(data);
+
+        // Get selectedMarket from the fetched company data
+        const selectedMarket = data.company.selectedMarket;
+
+        // Set price unit based on selected market
+        if (selectedMarket === 'algérien') {
+          setPriceUnit('DZD');
+        } else {
+          setPriceUnit('USD');
+        }
+      } catch (error) {
+        console.error('Error fetching company data:', error);
+      }
+    }
+
+    fetchCompanyData();
+  }, []);
 
   useEffect(() => {
     async function fetchProductData() {
@@ -102,7 +127,7 @@ function AdsCreation() {
                 <TableCell>{product.secteur}</TableCell>
                 <TableCell>{product.categorie}</TableCell>
                 <TableCell>{product.sousCategorie}</TableCell>
-                <TableCell>{product.prix}</TableCell>
+                <TableCell>{product.prix} {priceUnit}</TableCell>
                 <TableCell align="left"><StatusButton status={product.status} /></TableCell>
                 <TableCell align="center" sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
                   <div style={{ 

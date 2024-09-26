@@ -81,7 +81,7 @@ function CustomStepIcon(props: StepIconProps) {
   );
 }
 
-const steps = ['Choose Offer', 'Complete Info', 'Validation', 'Payment'];
+const steps = ['Choix de l’offre', 'Informations de la publicite', 'Validation pour paiement', 'Paiement'];
 
 export default function HybridStepper() {
   const dispatch = useDispatch();
@@ -242,6 +242,14 @@ export default function HybridStepper() {
     const newCompleted = { ...completed, 2: true }; 
     setCompleted(newCompleted);
   };
+
+  const isNextButtonDisabled = () => {
+    if (activeStep === 2) {
+      return adStatus !== 'approved';
+    }
+    return false;
+  };
+
   return (
     <>
     <div className="marketin_visual_title">
@@ -277,33 +285,31 @@ export default function HybridStepper() {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            {/* {<Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>} */}
             {activeStep === 1 && <CompleteInfoStep formData={formData} setFormData={setFormData} />}
             {activeStep === 2 && (
               <>
-               {showAlert && (
-              <Alert
-                severity="success"
-                onClose={() => setShowAlert(false)}
-                sx={{ 
-                  mb: 2, 
-                  position: 'fixed',      // Fixed position
-                  bottom: 0,              // Stick to the bottom of the page
-                  left: 0,                // Align to the left
-                  right: 0,               // Align to the right (full width)
-                  zIndex: 1000            // Ensure it appears above other elements
-                }}
-              >
-                Ad successfully created! It's waiting for admin approval.
-                <Link href="/">
-                  <Button color="inherit" size="small">
-                    Retour à l'accueil
-                  </Button>
-                </Link>
-              </Alert>
-            )}
-
-                <ValidationStep />
+                {showAlert && (
+                  <Alert
+                    severity="success"
+                    onClose={() => setShowAlert(false)}
+                    sx={{ 
+                      mb: 2, 
+                      position: 'fixed',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      zIndex: 1000
+                    }}
+                  >
+                    Annonce créée avec succès ! Elle est en attente de l'approbation de l'administrateur.
+                    <Link href="/">
+                      <Button color="inherit" size="small">
+                        Retour à l'accueil
+                      </Button>
+                    </Link>
+                  </Alert>
+                )}
+                <ValidationStep onApprove={handleAdApproval} />
               </>
             )}
             {activeStep === 3 && <PaymentStep />}
@@ -316,7 +322,11 @@ export default function HybridStepper() {
               >
                 Retour
               </Button>
-              <Button onClick={handleNext} className="nextBtn">
+              <Button 
+                onClick={handleNext} 
+                className="nextBtn"
+                disabled={isNextButtonDisabled()}
+              >
                 {activeStep === steps.length - 1 ? 'Fin' : 'Continuer'}
               </Button>
             </Box>

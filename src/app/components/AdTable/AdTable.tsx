@@ -26,7 +26,7 @@ const AdTable = ({ ads = [] }) => {
             <TableCell className='TableHead'>Type</TableCell>
             <TableCell className='TableHead' align="left">Description</TableCell>
             <TableCell className='TableHead' align="left">Commence le</TableCell>
-            <TableCell className='TableHead' align="left">Duré</TableCell>
+            <TableCell className='TableHead' align="left">Durée</TableCell>
             <TableCell className='TableHead' align="left">Origine de l'entreprise</TableCell>
             <TableCell className='TableHead' align="left">Montant totale</TableCell>
             <TableCell className='TableHead' align="left">Status</TableCell>

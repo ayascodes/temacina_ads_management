@@ -6,10 +6,13 @@
   --text-color: #333;
   --text-light-color:#1E1E1E;
   --grey-color: #E2E8F0;
+  --darker-grey-color:#535553;
 }
 body{
   margin: 0px;
   padding: Opx;
+  overflow-x: hidden;
+
 }
 .companyProfile{
   display: flex;
@@ -359,6 +362,55 @@ width: 300px; /* Set a fixed width for alignment */
 /* ----------------------------------------------------- */
 .StepperContainer{
   margin-top: 50px;
+}
+/* ----------------------------------------------------------- */
+.CompleteInfoText{
+  padding: 40px;
+}
+.CompleteInfoText h1,
+.CompleteInfoText h3 {
+  margin: 0;
+}
+.CompleteInfoText h3{
+  color : var(--darker-grey-color)
+}
+.CompleteInfoInput{
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 1px solid var(--the-famous-orange);
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.CompleteInfoInputContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Align items vertically */
+  justify-content: flex-start; /* Align items to the left */
+  gap: 10px;
+  padding-left: 30px;
+  margin-bottom: 10px;
+}
+#counterBtn{
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  background-color: white ;
+  border: 1px solid var(--the-famous-orange);
+  border-radius: 6px;
+}
+.whatever{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.label{
+  width: 200px;
+}
+.validationContainer{
+  font-family: poppins;
 }
 
 /* .poppins-thin {

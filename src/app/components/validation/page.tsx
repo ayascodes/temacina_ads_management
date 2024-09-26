@@ -8,15 +8,14 @@ const NextStepComponent: React.FC = () => {
   const ads = useSelector((state: RootState) => state.ad.ads);
 
   return (
-    <div>
-      <h2>Your Ads</h2>
+    <div className='validationContainer'>
+      <h1>Validation pour paiement :</h1>
       {ads.length === 0 ? (
         <p>No ads created yet.</p>
       ) : (
         <div>
-      <h1>Ad List</h1>
-      <AdTable ads={ads} />
-    </div>
+          <AdTable ads={ads} />
+        </div>
       )}
     </div>
   );
