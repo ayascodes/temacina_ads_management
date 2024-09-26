@@ -111,7 +111,7 @@ const getPageOffers = (
     const sectorColor = secteurColorMap[companySecteur];
     pageOffers[0].placements.push({
       id: getPlacementId("LeMarché", companyType, companyMarche, companySecteur),
-      title: `Marché ${companyMarche} - secteur ${companySecteur}`, // Dynamic title
+      title: `Merché ${companyMarche} - secteur ${companySecteur}`, // Dynamic title
       price: 2000,
       duration: 30,
       durationUnit

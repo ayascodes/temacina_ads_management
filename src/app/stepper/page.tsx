@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -8,21 +8,38 @@ import StepLabel from '@mui/material/StepLabel';
 import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
+import Link from 'next/link';
 import ChooseOffer from '../components/choose_offer/page';
 import CompleteInfoStep from '../components/complete_infos/page';
 import ValidationStep from '../components/validation/page';
 import PaymentStep from '../components/payment/page';
-import Link from 'next/link';
+import { addAd } from '../components/features/ad/adSlice';
+import { RootState } from '../components/redux/store';
 
 const steps = ['Choose Offer', 'Complete Info', 'Validation', 'Payment'];
 
 export default function HybridStepper() {
+  const dispatch = useDispatch();
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState<{ [k: number]: boolean }>({});
   const [adStatus, setAdStatus] = useState('pending');
   const [companyData, setCompanyData] = useState(null);
-  const selectedOffer = useSelector((state: any) => state.offer.selectedOffer);
+  const [showAlert, setShowAlert] = useState(false);
+  const selectedOffer = useSelector((state: RootState) => state.offer.selectedOffer);
+  const selectedProductId = useSelector((state: RootState) => state.product.selectedProductId);
+  const [products, setProducts] = useState<Product[]>([]);
 
+  const [formData, setFormData] = useState({
+    startDate: '',
+    duration: selectedOffer ? selectedOffer.duration : 5,
+    paymentMethod: '',
+  });
+  type Product = {
+  id: string;
+  name: string;
+  description: string;
+};
   // Fetch company data from JSON
   useEffect(() => {
     const fetchCompanyData = async () => {
@@ -59,17 +76,68 @@ export default function HybridStepper() {
     }
   }, [selectedOffer]);
 
+  // Fetch products data
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/data/products.json');
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   const totalSteps = () => steps.length;
   const completedSteps = () => Object.keys(completed).length;
   const isLastStep = () => activeStep === totalSteps() - 1;
   const allStepsCompleted = () => completedSteps() === totalSteps();
 
   const handleNext = () => {
-    const newActiveStep =
-      isLastStep() && !allStepsCompleted()
+    if (activeStep === 1) { // CompleteInfoStep
+      handleAdCreation();
+    } else {
+      const newActiveStep = isLastStep() && !allStepsCompleted()
         ? steps.findIndex((step, i) => !(i in completed))
-        : Math.min(activeStep + 1, steps.length - 1);
-    setActiveStep(newActiveStep);
+        : activeStep + 1;
+      setActiveStep(newActiveStep);
+    }
+  };
+  const getProductNameById = (id: string | null): string | null => {
+    if (!id) return null;
+    const product = products.find(product => product.id === id);
+    return product ? product.name : null;
+  };
+  const selectedProductName = getProductNameById(selectedProductId);
+
+  const handleAdCreation = () => {
+    if (selectedOffer && selectedProductId) {
+      const newAd = {
+        productId: selectedProductId,
+        type_de_publicite: selectedProductName, // Assuming this is correct, adjust if needed
+        offerId: selectedOffer.id,
+        offerTitle: selectedOffer.title,
+        offerSubtitle: selectedOffer.subtitle,
+        description: `${selectedOffer.title} ${selectedOffer.subtitle}`.trim(),
+        commence_le: formData.startDate,
+        duree: formData.duration,
+        durationUnit: selectedOffer.durationUnit,
+        montant_totale: `${calculateTotalPrice(selectedOffer.price, formData.duration)} ${selectedOffer.priceUnit}`.trim(),
+        origine_de_lentreprise: companyData.company.origin, // Adjust as needed
+        paymentMethod: formData.paymentMethod,
+        status: 'Pending',
+      };
+      dispatch(addAd(newAd));
+      setShowAlert(true);
+      setActiveStep(2); // Move to Validation step
+    }
+  };
+
+  const calculateTotalPrice = (price: number, duration: number): string => {
+    return ((price * duration) / selectedOffer.duration).toFixed(2);
   };
 
   const handleBack = () => {
@@ -137,8 +205,22 @@ export default function HybridStepper() {
         ) : (
           <React.Fragment>
             <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-            {activeStep === 1 && <CompleteInfoStep />}
-            {activeStep === 2 && <ValidationStep />}
+            {activeStep === 1 && <CompleteInfoStep formData={formData} setFormData={setFormData} />}
+            {activeStep === 2 && (
+              <>
+                {showAlert && (
+                  <Alert severity="success" onClose={() => setShowAlert(false)}>
+                    Ad successfully created! It's waiting for admin approval.
+                    <Link href="/">
+                      <Button color="inherit" size="small">
+                        Go to Ad Management
+                      </Button>
+                    </Link>
+                  </Alert>
+                )}
+                <ValidationStep />
+              </>
+            )}
             {activeStep === 3 && <PaymentStep />}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Button
@@ -150,28 +232,13 @@ export default function HybridStepper() {
                 Back
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
-              {activeStep === 2 ? (
-                adStatus === 'pending' ? (
-                  <Link href="/">Check Ad Status</Link>
-                ) : (
-                  <Button onClick={handleNext}>
-                    Proceed to Payment
-                  </Button>
-                )
-              ) : (
-                <Button onClick={handleComplete}>
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                </Button>
-              )}
+              <Button onClick={handleNext}>
+                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+              </Button>
             </Box>
           </React.Fragment>
         )}
       </div>
-      {activeStep === 2 && adStatus === 'pending' && (
-        <Button onClick={handleAdApproval} sx={{ mt: 2 }}>
-          Simulate Admin Approval
-        </Button>
-      )}
     </Box>
   );
 }
