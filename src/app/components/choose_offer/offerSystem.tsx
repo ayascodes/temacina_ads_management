@@ -1,5 +1,6 @@
 // File: components/choose_offer/offerSystem.ts
 import OfferCard from "../offer_card/page";
+import { useSelector } from 'react-redux';
 type CompanyType = 'ordinaire' | 'artisanal' | 'startup';
 type Marche = 'algérien' | 'international';
 type Secteur = 'Industrie' | 'Agriculture' | 'Construction' | 'ITech';
@@ -180,62 +181,63 @@ const getPageOffers = (
   return pageOffers;
 };
 
+// Assuming adType is stored in Redux
+const adTypeSelector = (state) => state.adType; // Adjust selector as needed
+
 export const generateOfferCards = (
   companyType: CompanyType,
   companyMarche: Marche,
   companySecteur: Secteur,
-  origineEntreprise: OrigineDeLEntreprise,
-  adType: string // Accept adType as a parameter
+  origineEntreprise: OrigineDeLEntreprise
 ): JSX.Element[] => {
-  const pages = getPageOffers(companyType, companyMarche, companySecteur, origineEntreprise);
+  const adType = useSelector(adTypeSelector); // Get adType from Redux
 
-  if (adType === 'megaSlideHaut') {
+  if (adType === 'Mega Haut Slide') {
     // Generate cards for Mega Haut Slide
-    return pages.map(pageOffer => {
-      /* const { price, duration, durationUnit } = getOfferPageDetails(pageOffer.page); // Get the details for the page */
+    const pages = getPageOffers(companyType, companyMarche, companySecteur, origineEntreprise);
 
-      return (
-        <OfferCard
-          key={`${pageOffer.page}-mega_haut_slide`}
-          title="Mega Haut Slide"
-          subtitle={pageOffer.page}
-          price={123}
-          priceUnit={getPriceUnit(origineEntreprise)}
-          duration={22}
-          durationUnit={"DZD"}
-          svgPath={pageOffer.svgPath}
-          placements={[{ id: 'mega_haut_slide', color: '#FF561C' }]}
-        />
-      );
-    });
+    // For each page, create a Mega Haut Slide offer
+    return pages.map(pageOffer => (
+      <OfferCard
+        key={`${pageOffer.page}-mega_haut_slide`}
+        title="Mega Haut Slide"
+        subtitle={pageOffer.page}
+        price="100"
+        priceUnit={getPriceUnit(origineEntreprise)}
+        duration={30} // Assuming duration is fixed for Mega Haut Slide
+        durationUnit="jours"
+        svgPath={pageOffer.svgPath}
+        placements={[{ id: 'mega_haut_slide', color: '#FF561C' }]}
+      />
+    ));
   } else {
     // Existing logic for 'product' adType remains unchanged
-    return pages.flatMap(pageOffer => {
-      /* const { price, duration, durationUnit } = getOfferPageDetails(pageOffer.page); */
-
-      return pageOffer.placements.map(placement => {
+    const pageOffers = getPageOffers(companyType, companyMarche, companySecteur, origineEntreprise);
+    
+    return pageOffers.flatMap(pageOffer =>
+      pageOffer.placements.map(placement => {
         const placementsArray = pageOffer.page === "Page Secteur" && companyType === 'ordinaire'
           ? placement.rectangleIds.map(id => ({ id, color: placement.color }))
           : [{ id: placement.id, color: '#FF561C' }];
-
+  
         if (placement.title.includes("Plein page")) {
           placementsArray.push({ id: 'plein', color: '#FF561C' });
         }
-
+  
         return (
           <OfferCard
             key={`${pageOffer.page}-${placement.id}`}
             title={placement.title}
             subtitle={placement.subtitle || pageOffer.page}
-            price={123} // Use customized price
+            price={placement.price}
             priceUnit={getPriceUnit(origineEntreprise)}
-            duration={11} // Use customized duration
-            durationUnit={"durationUnit"} // Use customized duration unit
+            duration={placement.duration}
+            durationUnit={placement.durationUnit || 'jours'}
             svgPath={pageOffer.svgPath}
             placements={placementsArray}
           />
         );
-      });
-    });
+      })
+    );
   }
 };

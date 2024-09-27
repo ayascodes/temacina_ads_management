@@ -1,7 +1,8 @@
 {
-    "offersInfo": [
-      {
-        "page": "Page d'accueil",
+  "offersInfo": [
+    {
+      "page": "Page d'accueil",
+      "product": {
         "placements": [
           {
             "name": "Nouvel arrivage",
@@ -28,15 +29,7 @@
             }
           },
           {
-            "name": "Marché algérien",
-            "price": 800,
-            "duration": {
-              "value": 30,
-              "unit": "jours"
-            }
-          },
-          {
-            "name": "Marché international",
+            "name": "LeMarché",
             "price": 2000,
             "duration": {
               "value": 30,
@@ -52,7 +45,7 @@
             }
           },
           {
-            "name": "Startups",
+            "name": "Startup",
             "price": 750,
             "duration": {
               "value": 14,
@@ -61,8 +54,17 @@
           }
         ]
       },
-      {
-        "page": "Page Art",
+      "megaHautSlide": {
+        "price": 1500,
+        "duration": {
+          "value": 3,
+          "unit": "jours"
+        }
+      }
+    },
+    {
+      "page": "Page Nouvel arrivage",
+      "product": {
         "placements": [
           {
             "name": "Plein page",
@@ -74,8 +76,61 @@
           }
         ]
       },
-      {
-        "page": "Page Startup",
+      "megaHautSlide": {
+        "price": 3500,
+        "duration": {
+          "value": 7,
+          "unit": "jours"
+        }
+      }
+    },
+    {
+      "page": "Page Meilleurs produits",
+      "product": {
+        "placements": [
+          {
+            "name": "Plein page",
+            "price": 3000,
+            "duration": {
+              "value": 30,
+              "unit": "jours"
+            }
+          }
+        ]
+      },
+      "megaHautSlide": {
+        "price": 3500,
+        "duration": {
+          "value": 7,
+          "unit": "jours"
+        }
+      }
+    },
+    {
+      "page": "Page Soldes",
+      "product": {
+        "placements": [
+          {
+            "name": "Plein page",
+            "price": 3000,
+            "duration": {
+              "value": 30,
+              "unit": "jours"
+            }
+          }
+        ]
+      },
+      "megaHautSlide": {
+        "price": 3500,
+        "duration": {
+          "value": 7,
+          "unit": "jours"
+        }
+      }
+    },
+    {
+      "page": "Page Startup",
+      "product": {
         "placements": [
           {
             "name": "Plein page",
@@ -87,25 +142,21 @@
           }
         ]
       },
-      {
-        "page": "Page Nouvel arrivage",
+      "megaHautSlide": {
+        "price": 3000,
+        "duration": {
+          "value": 7,
+          "unit": "jours"
+        }
+      }
+    },
+    {
+      "page": "Page Produit artisanal",
+      "product": {
         "placements": [
           {
             "name": "Plein page",
-            "price": 2800,
-            "duration": {
-              "value": 14,
-              "unit": "jours"
-            }
-          }
-        ]
-      },
-      {
-        "page": "Page Meilleurs produits",
-        "placements": [
-          {
-            "name": "Plein page",
-            "price": 3200,
+            "price": 2200,
             "duration": {
               "value": 30,
               "unit": "jours"
@@ -113,27 +164,30 @@
           }
         ]
       },
-      {
-        "page": "Page Soldes",
-        "placements": [
-          {
-            "name": "Plein page",
-            "price": 3500,
-            "duration": {
-              "value": 14,
-              "unit": "jours"
-            }
-          }
-        ]
+      "megaHautSlide": {
+        "price": 2700,
+        "duration": {
+          "value": 7,
+          "unit": "jours"
+        }
       }
-    ],
-    "companyInfo": {
-      "companyType": ["ordinaire", "art", "startup"],
-      "secteur": {
-        "options": ["Industrie", "Agriculture", "Construction", "ITech"],
-        "isOptional": true
-      },
-      "marchéVisé": ["national", "international"],
-      "origineDeLEntreprise": ["algérienne", "internationale"]
     }
-  }
+  ],
+  "companyInfo":[
+    {
+    "sectors": ["Industrie", "Agriculture", "Construction", "ITech"],
+    "markets": ["algérien", "international"],
+    "currencies": ["Dinar algerian DZD", "Dolar USD"],
+    "companyTypes": ["ordinaire","artisanal","startup"],
+    "company": {
+      "Type": "startup",
+      "name": "Tech market",
+      "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nam suscipit animi magnam. Quaerat, earum harum. Quaerat nesciunt et nulla praesentium illo, delectus blanditiis autem porro nemo voluptatem ducimus voluptas molestiae deleniti nam cumque? Neque deleniti numquam, rerum eum maxime ab.",
+      "selectedSectors": ["Construction"],
+      "selectedMarket": "algérien",
+      "selectedCurrency": "Dinar algerian DZD",
+      "origin": "algérienne"
+    }
+    }
+  ]
+}
