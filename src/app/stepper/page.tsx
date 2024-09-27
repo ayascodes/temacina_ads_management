@@ -250,91 +250,119 @@ export default function HybridStepper() {
     }
     return false;
   };
-
   return (
     <>
-    <div className="marketin_visual_title">
-      <h1>Marketing Visuel  DA TTC/Jour</h1>
-    </div>
-    <Box className="StepperContainer" sx={{ width: '100%', p: 2 }}>
-      <Stepper activeStep={activeStep} alternativeLabel connector={<CustomConnector />}>
-        {steps.map((label, index) => (
-          <Step key={label}>
-            <StepButton color="inherit" onClick={handleStep(index)} disabled={adCreated && index < activeStep}>
-              <StepLabel StepIconComponent={CustomStepIcon}>{label}</StepLabel>
-            </StepButton>
-          </Step>
-        ))}
-      </Stepper>
-      <Box sx={{ p: 3 }}>
-        {activeStep === 0 && companyData ? (
-          <ChooseOffer 
-            companyType={companyData.company.Type}
-            companyMarche={companyData.company.selectedMarket}
-            companySecteur={companyData.company.selectedSectors}
-            origineEntreprise={companyData.company.origin}
-          />
-        ) : allStepsCompleted() ? (
-          <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>
-              All steps completed - you're finished
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleReset}>Reset</Button>
-            </Box>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            {activeStep === 1 && <CompleteInfoStep formData={formData} setFormData={setFormData} />}
-            {activeStep === 2 && (
-              <>
-                {showAlert && (
-                  <Alert
-                    severity="success"
-                    onClose={() => setShowAlert(false)}
-                    sx={{ 
-                      mb: 2, 
-                      position: 'fixed',
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      zIndex: 1000
-                    }}
-                  >
-                    Annonce créée avec succès ! Elle est en attente de l'approbation de l'administrateur.
-                    <Link href="/">
-                      <Button color="inherit" size="small">
-                        Retour à l'accueil
-                      </Button>
-                    </Link>
-                  </Alert>
+      {/* Conditionally apply blur to the entire page when alert is shown */}
+      <div className={showAlert ? 'blur-background' : ''}>
+        <div className="marketin_visual_title">
+          <h1>Marketing Visuel  DA TTC/Jour</h1>
+        </div>
+        <Box className="StepperContainer" sx={{ width: '100%', p: 2 }}>
+          <Stepper activeStep={activeStep} alternativeLabel connector={<CustomConnector />}>
+            {steps.map((label, index) => (
+              <Step key={label}>
+                <StepButton color="inherit" onClick={handleStep(index)} disabled={adCreated && index < activeStep}>
+                  <StepLabel StepIconComponent={CustomStepIcon}>{label}</StepLabel>
+                </StepButton>
+              </Step>
+            ))}
+          </Stepper>
+          <Box sx={{ p: 3 }}>
+            {activeStep === 0 && companyData ? (
+              <ChooseOffer 
+                companyType={companyData.company.Type}
+                companyMarche={companyData.company.selectedMarket}
+                companySecteur={companyData.company.selectedSectors}
+                origineEntreprise={companyData.company.origin}
+              />
+            ) : allStepsCompleted() ? (
+              <React.Fragment>
+                <Typography sx={{ mt: 2, mb: 1 }}>
+                  All steps completed - you're finished
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                  <Box sx={{ flex: '1 1 auto' }} />
+                  <Button onClick={handleReset}>Reset</Button>
+                </Box>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                {activeStep === 1 && <CompleteInfoStep formData={formData} setFormData={setFormData} />}
+                {activeStep === 2 && (
+                  <>
+                   {/*  {showAlert && (
+                      <Alert
+                        severity="success"
+                        onClose={() => setShowAlert(false)}
+                        sx={{
+                          mb: 2,
+                          position: 'fixed',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          width: 'fit-content',
+                          zIndex: 1000,
+                        }}
+                      >
+                        Annonce créée avec succès ! Elle est en attente de l'approbation de l'administrateur.
+                        <Link href="/">
+                          <Button color="inherit" size="small">
+                            Retour à la page principale du marketing visuel
+                          </Button>
+                        </Link>
+                      </Alert>
+                    )} */}
+                    <ValidationStep onApprove={handleAdApproval} />
+                  </>
                 )}
-                <ValidationStep onApprove={handleAdApproval} />
-              </>
+                {activeStep === 3 && <PaymentStep />}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 2 }}>
+                  <Button
+                    className="backBtn"
+                    disabled={activeStep === 0 || adCreated}
+                    onClick={handleBack}
+                    sx={{ mr: 1 }}
+                  >
+                    Retour
+                  </Button>
+                  <Button 
+                    onClick={handleNext} 
+                    className="nextBtn"
+                    disabled={isNextButtonDisabled()}
+                  >
+                    {activeStep === steps.length - 1 ? 'Fin' : 'Continuer'}
+                  </Button>
+                </Box>
+              </React.Fragment>
             )}
-            {activeStep === 3 && <PaymentStep />}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 2 }}>
-              <Button
-                className="backBtn"
-                disabled={activeStep === 0 || adCreated}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                Retour
-              </Button>
-              <Button 
-                onClick={handleNext} 
-                className="nextBtn"
-                disabled={isNextButtonDisabled()}
-              >
-                {activeStep === steps.length - 1 ? 'Fin' : 'Continuer'}
-              </Button>
-            </Box>
-          </React.Fragment>
-        )}
-      </Box>
-    </Box>
+          </Box>
+        </Box>
+      </div>
+  
+      {/* Custom alert at the center of the screen */}
+      {showAlert && (
+        <Alert
+          severity="success"
+          onClose={() => setShowAlert(false)}
+          sx={{
+            mb: 2,
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)', // Center it vertically and horizontally
+            width: 'fit-content',
+            zIndex: 1000, // Ensure it's above everything else
+          }}
+        >
+          Annonce créée avec succès ! Elle est en attente de l'approbation de l'administrateur.
+          <Link href="/">
+            <Button color="inherit" size="small">
+            Retour à la page principale du marketing visuel
+            </Button>
+          </Link>
+        </Alert>
+      )}
     </>
-  );  
+  );
+    
 }
