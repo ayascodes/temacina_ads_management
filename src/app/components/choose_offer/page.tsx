@@ -12,10 +12,8 @@ interface ChooseOfferProps {
 
 function ChooseOffer({ companyType, companyMarche, companySecteur, origineEntreprise }: ChooseOfferProps) {
     const [selectedPages, setSelectedPages] = useState<string[]>([]);
-    const [offerCards, setOfferCards] = useState<JSX.Element[]>([]);
-
+    
     const pageOptions = useMemo(() => {
-        console.log('Generating page options for company type:', companyType);
         switch (companyType) {
             case 'artisanal':
                 return [
@@ -36,40 +34,36 @@ function ChooseOffer({ companyType, companyMarche, companySecteur, origineEntrep
             default:
                 return [
                     'Page d\'accueil',
-                    'Page secteur '+companySecteur,
+                    `Page secteur ${companySecteur}`,
                     'Page Nouvel arrivage',
                     'Page Meilleurs produits',
                     'Page Soldes'
                 ];
         }
-    }, [companyType]);
+    }, [companyType, companySecteur]);
 
-    useEffect(() => {
-        console.log('Generating offer cards with:', { companyType, companyMarche, companySecteur, origineEntreprise, selectedPages });
+    const offerCards = useMemo(() => {
+        console.log('Generating offer cards with:', { companyType, companyMarche, companySecteur, origineEntreprise });
         const allOfferCards = generateOfferCards(companyType, companyMarche, companySecteur, origineEntreprise);
         console.log('Generated offer cards:', allOfferCards.length);
-        
+
         if (selectedPages.length > 0) {
             const filteredCards = allOfferCards.filter(card => {
                 const cardSubtitle = (card.props as any).subtitle;
-                console.log("HEEEEYYYYYY",cardSubtitle); // Debugging
-                return selectedPages.some(page => cardSubtitle.includes(page));
+                return selectedPages.some(page => cardSubtitle === page);
             });
-            
+
             console.log('Filtered cards:', filteredCards.length);
-            setOfferCards(filteredCards);
-        } else {
-            console.log('No pages selected, showing all cards');
-            setOfferCards(allOfferCards);
+            return filteredCards;
         }
+
+        return allOfferCards;
     }, [companyType, companyMarche, companySecteur, origineEntreprise, selectedPages]);
 
     const handlePageChange = (newSelection: string[]) => {
         console.log('Handle page change called with:', newSelection);
-        // Directly set the new array of selected pages
         setSelectedPages(newSelection);
     };
-    
 
     return (
         <>
@@ -79,12 +73,10 @@ function ChooseOffer({ companyType, companyMarche, companySecteur, origineEntrep
                 options={pageOptions}
                 selected={selectedPages}
                 onChange={handlePageChange}
-                
             />
             <div className="offer-cards-container">
-                    {offerCards.length > 0 ? offerCards : <p>No offer cards to display</p>}
+                {offerCards.length > 0 ? offerCards : <p>No offer cards to display</p>}
             </div>
-
         </>
     );
 }

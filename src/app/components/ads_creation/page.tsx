@@ -18,12 +18,15 @@ import Link from 'next/link';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { selectProduct } from '../features/product/productSlice';
+import { useDispatch } from 'react-redux';
+import { setCurrentAdType } from '../features/ad/adSlice';
 
 function AdsCreation() {
-  const dispatch = useAppDispatch();
+  const dispatche = useAppDispatch();
   const selectedProductId = useAppSelector(state => state.product.selectedProductId);
   const [products, setProducts] = useState([]);
   const [companyData, setCompanyData] = useState(null);
+  const dispatch = useDispatch();
   const theme = createTheme({
     components: {
       MuiCheckbox: {
@@ -92,6 +95,10 @@ function AdsCreation() {
     if (status !== 'Rejected') {
       dispatch(selectProduct(productId));
     }
+  };
+  const handleAdCreation = (adType: AdType) => {
+    dispatch(setCurrentAdType(adType));
+    console.log(adType);
   };
 
   const isProductRejected = (productId) => {
@@ -184,12 +191,22 @@ function AdsCreation() {
         </Table>
       </TableContainer>
       <Container className='AdsCreationContainer'>
-        <div className='AdsCreationButton'>
-          <h3>Créer une publicite <span className="highlight">Mega Slide Haut</span></h3>
-        </div>
+        <Link
+        href={'/stepper'}
+        onClick={() => handleAdCreation('megaSlideHaut')}
+        >
+          <div className='AdsCreationButton' >
+            <h3>Créer une publicite <span className="highlight">Mega Slide Haut</span></h3>
+          </div>
+        </Link>
         <Link 
           href={!isProductRejected(selectedProductId) ? `/product_info` : '#'}
-          onClick={() => !isProductRejected(selectedProductId) && handleProductAdClick(selectedProductId)}
+          onClick={() => {
+            if (!isProductRejected(selectedProductId)) {
+              handleProductAdClick(selectedProductId);
+              handleAdCreation('product');
+            }
+          }}          
           style={{ pointerEvents: isProductRejected(selectedProductId) ? 'none' : 'auto' }}
         >
           <div className='AdsCreationButton' style={{ opacity: isProductRejected(selectedProductId) ? 0.5 : 1 }}>
