@@ -4,7 +4,7 @@
     "currencies": ["Dinar algerian DZD", "Dolar USD"],
     "companyTypes": ["ordinaire","artisanal","startup"],
     "company": {
-      "Type": "ordinaire",
+      "Type": "startup",
       "name": "Tech market",
       "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nam suscipit animi magnam. Quaerat, earum harum. Quaerat nesciunt et nulla praesentium illo, delectus blanditiis autem porro nemo voluptatem ducimus voluptas molestiae deleniti nam cumque? Neque deleniti numquam, rerum eum maxime ab.",
       "selectedSectors": ["Construction"],

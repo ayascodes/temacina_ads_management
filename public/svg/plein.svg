@@ -60,7 +60,7 @@
 <rect id="sec2" x="6" y="33.1709" width="33" height="5.26829" rx="2.63415" fill="url(#paint56_linear_592_1952)"/>
 <rect id="sec3" x="6" y="40.1953" width="33" height="5.41463" rx="2.70732" fill="url(#paint57_linear_592_1952)"/>
 <rect id="sec4" x="6" y="47.3657" width="33" height="5.63415" rx="2.81707" fill="url(#paint58_linear_592_1952)"/>
-<rect x="45" y="26" width="83" height="27" rx="4" fill="url(#paint59_linear_592_1952)"/>
+<rect id="mega_haut_slide" x="45" y="26" width="83" height="27" rx="4" fill="url(#paint59_linear_592_1952)"/>
 <defs>
 <linearGradient id="paint0_linear_592_1952" x1="46" y1="17" x2="120" y2="17" gradientUnits="userSpaceOnUse">
 <stop stop-color="#E2E8F0"/>

@@ -1,7 +1,9 @@
 "use client";
 import React, { useState, useEffect, useMemo } from 'react';
 import Filtre from '../filter/page';
+import { useSelector } from 'react-redux';
 import { generateOfferCards } from './offerSystem';
+import { RootState } from '../redux/store'; // Import RootState type
 
 interface ChooseOfferProps {
     companyType: 'ordinaire' | 'artisanal' | 'startup';
@@ -13,7 +15,10 @@ interface ChooseOfferProps {
 function ChooseOffer({ companyType, companyMarche, companySecteur, origineEntreprise }: ChooseOfferProps) {
     const [selectedPages, setSelectedPages] = useState<string[]>([]);
     const [offerCards, setOfferCards] = useState<JSX.Element[]>([]);
-
+    
+    const currentAdType = useSelector((state: RootState) => state.ad.currentAdType);
+    
+    console.log("Current Ad Type from Redux:", currentAdType);
     const pageOptions = useMemo(() => {
         console.log('Generating page options for company type:', companyType);
         switch (companyType) {
@@ -45,14 +50,14 @@ function ChooseOffer({ companyType, companyMarche, companySecteur, origineEntrep
     }, [companyType]);
 
     useEffect(() => {
-        console.log('Generating offer cards with:', { companyType, companyMarche, companySecteur, origineEntreprise, selectedPages });
-        const allOfferCards = generateOfferCards(companyType, companyMarche, companySecteur, origineEntreprise);
+        console.log('Generating offer cards with:', { companyType, companyMarche, companySecteur, origineEntreprise, selectedPages, currentAdType });
+        const allOfferCards = generateOfferCards(companyType, companyMarche, companySecteur, origineEntreprise, currentAdType);
         console.log('Generated offer cards:', allOfferCards.length);
         
         if (selectedPages.length > 0) {
             const filteredCards = allOfferCards.filter(card => {
                 const cardSubtitle = (card.props as any).subtitle;
-                console.log("HEEEEYYYYYY",cardSubtitle); // Debugging
+                console.log("Card subtitle:", cardSubtitle);
                 return selectedPages.some(page => cardSubtitle.includes(page));
             });
             
@@ -62,7 +67,7 @@ function ChooseOffer({ companyType, companyMarche, companySecteur, origineEntrep
             console.log('No pages selected, showing all cards');
             setOfferCards(allOfferCards);
         }
-    }, [companyType, companyMarche, companySecteur, origineEntreprise, selectedPages]);
+    }, [companyType, companyMarche, companySecteur, origineEntreprise, selectedPages, currentAdType]);
 
     const handlePageChange = (newSelection: string[]) => {
         console.log('Handle page change called with:', newSelection);

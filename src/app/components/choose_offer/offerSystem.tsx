@@ -184,33 +184,58 @@ export const generateOfferCards = (
   companyType: CompanyType,
   companyMarche: Marche,
   companySecteur: Secteur,
-  origineEntreprise: OrigineDeLEntreprise
+  origineEntreprise: OrigineDeLEntreprise,
+  adType: string // Accept adType as a parameter
 ): JSX.Element[] => {
-  const pageOffers = getPageOffers(companyType, companyMarche, companySecteur, origineEntreprise);
+  const pages = getPageOffers(companyType, companyMarche, companySecteur, origineEntreprise);
 
-  return pageOffers.flatMap(pageOffer => 
-    pageOffer.placements.map(placement => {
-      const placementsArray = pageOffer.page === "Page Secteur" && companyType === 'ordinaire'
-        ? placement.rectangleIds.map(id => ({ id, color: placement.color }))
-        : [{ id: placement.id, color: '#FF561C' }];
-
-      if (placement.title.includes("Plein page")) {
-        placementsArray.push({ id: 'plein', color: '#FF561C' });
-      }
+  if (adType === 'megaSlideHaut') {
+    // Generate cards for Mega Haut Slide
+    return pages.map(pageOffer => {
+      /* const { price, duration, durationUnit } = getOfferPageDetails(pageOffer.page); // Get the details for the page */
 
       return (
         <OfferCard
-          key={`${pageOffer.page}-${placement.id}`}
-          title={placement.title}
-          subtitle={placement.subtitle || pageOffer.page}
-          price={placement.price}
+          key={`${pageOffer.page}-mega_haut_slide`}
+          title="Mega Haut Slide"
+          subtitle={pageOffer.page}
+          price={123}
           priceUnit={getPriceUnit(origineEntreprise)}
-          duration={placement.duration}
-          durationUnit={placement.durationUnit || 'jours'}
+          duration={22}
+          durationUnit={"DZD"}
           svgPath={pageOffer.svgPath}
-          placements={placementsArray}
+          placements={[{ id: 'mega_haut_slide', color: '#FF561C' }]}
         />
       );
-    })
-  );
+    });
+  } else {
+    // Existing logic for 'product' adType remains unchanged
+    return pages.flatMap(pageOffer => {
+      /* const { price, duration, durationUnit } = getOfferPageDetails(pageOffer.page); */
+
+      return pageOffer.placements.map(placement => {
+        const placementsArray = pageOffer.page === "Page Secteur" && companyType === 'ordinaire'
+          ? placement.rectangleIds.map(id => ({ id, color: placement.color }))
+          : [{ id: placement.id, color: '#FF561C' }];
+
+        if (placement.title.includes("Plein page")) {
+          placementsArray.push({ id: 'plein', color: '#FF561C' });
+        }
+
+        return (
+          <OfferCard
+            key={`${pageOffer.page}-${placement.id}`}
+            title={placement.title}
+            subtitle={placement.subtitle || pageOffer.page}
+            price={123} // Use customized price
+            priceUnit={getPriceUnit(origineEntreprise)}
+            duration={11} // Use customized duration
+            durationUnit={"durationUnit"} // Use customized duration unit
+            svgPath={pageOffer.svgPath}
+            placements={placementsArray}
+          />
+        );
+      });
+    });
+  }
 };
