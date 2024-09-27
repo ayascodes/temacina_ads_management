@@ -97,7 +97,7 @@ export default function HybridStepper() {
 
   const [formData, setFormData] = useState({
     startDate: '',
-    duration: selectedOffer ? selectedOffer.duration : 5,
+    additionalDuration: 0,
     paymentMethod: '',
   });
   
@@ -181,6 +181,7 @@ export default function HybridStepper() {
 
   const handleAdCreation = () => {
     if (selectedOffer && selectedProductId) {
+      const totalDuration = selectedOffer.duration + formData.additionalDuration;
       const newAd = {
         productId: selectedProductId,
         type_de_publicite: selectedProductName, // Assuming this is correct, adjust if needed
@@ -189,9 +190,9 @@ export default function HybridStepper() {
         offerSubtitle: selectedOffer.subtitle,
         description: `${selectedOffer.title} ${selectedOffer.subtitle}`.trim(),
         commence_le: formData.startDate,
-        duree: formData.duration,
+        duree: totalDuration,
+        montant_totale: `${calculateTotalPrice(selectedOffer.price, totalDuration)} ${selectedOffer.priceUnit}`.trim(),
         durationUnit: selectedOffer.durationUnit,
-        montant_totale: `${calculateTotalPrice(selectedOffer.price, formData.duration)} ${selectedOffer.priceUnit}`.trim(),
         origine_de_lentreprise: companyData.company.origin, // Adjust as needed
         paymentMethod: formData.paymentMethod,
         status: 'Pending',

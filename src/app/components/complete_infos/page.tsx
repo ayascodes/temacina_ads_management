@@ -12,7 +12,7 @@ type Product = {
 type CompleteInfoStepProps = {
   formData: {
     startDate: string;
-    duration: number;
+    additionalDuration: number;
     paymentMethod: string;
   };
   setFormData: React.Dispatch<React.SetStateAction<{
@@ -56,8 +56,12 @@ const CompleteInfoStep: React.FC<CompleteInfoStepProps> = ({ formData, setFormDa
   };
 
   const handleDurationIncrease = () => {
-    setFormData({ ...formData, duration: formData.duration + 5 });
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      additionalDuration: prevFormData.additionalDuration + 5
+    }));
   };
+  const totalDuration = selectedOffer.duration + formData.additionalDuration;
 
   const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setFormData({ ...formData, paymentMethod: event.target.value });
@@ -105,7 +109,7 @@ const CompleteInfoStep: React.FC<CompleteInfoStepProps> = ({ formData, setFormDa
           <input 
             type="text" 
             id="duration" 
-            value={`${selectedOffer.duration} ${selectedOffer.durationUnit}`}
+            value={`${totalDuration} ${selectedOffer.durationUnit}`}
             readOnly 
             className='CompleteInfoInput'
           />
@@ -141,7 +145,7 @@ const CompleteInfoStep: React.FC<CompleteInfoStepProps> = ({ formData, setFormDa
         <input 
               type="text" 
               id="price" 
-              value={`${calculateTotalPrice(selectedOffer.price, formData.duration)} ${selectedOffer.priceUnit}`}
+              value={`${calculateTotalPrice(selectedOffer.price, totalDuration)} ${selectedOffer.priceUnit}`}
               readOnly 
               className='CompleteInfoInput'
             />
