@@ -92,6 +92,7 @@ function OfferSelection() {
   
     // Page d'accueil (Home page)
     if (adType === 'produit') {
+      console.log("Generating produit placements for Page d'accueil");
       const homePlacements = [...commonPages];
       if (companyType === 'ordinaire') {
         homePlacements.push(`Marché`);
@@ -155,7 +156,7 @@ function OfferSelection() {
   };
    // Get all unique pages for the Filtre component
    const allPages = Array.from(new Set(generatedPagesAndPlacements.map(item => item.page)));
-
+    console.log("HEYYY ALL PAGES ",allPages);
    // Handle filter changes
    const handleFilterChange = (selected: string[]) => {
      setFilteredPages(selected);
@@ -166,47 +167,47 @@ function OfferSelection() {
      ? generatedPagesAndPlacements.filter(item => filteredPages.includes(item.page))
      : generatedPagesAndPlacements;
  
-   return (
-     <div >
-      {/* <Image src="/svg/home.svg" alt="My Icon" width={400} height={400} /> */}
-       <Filtre
-         title="Page désirée : "
-         options={allPages}
-         selected={filteredPages}
-         onChange={setFilteredPages}
-       />
-       <div className="offer-cards-container">
-       {filteredPagesAndPlacements.map(({ page, placements }) => (
-         <div key={page} >
-           {placements.map((placement: string, index: number) => {
-             const offerDetails = findOfferData(page, placement, adType);
-             const title= (page === 'Page d\'accueil' && placement==='Marché') ? `Marché ${myCompanyMarche} - Secteur ${myCompanySecteur}`: placement
-             const subtitle = page === 'Page Secteur' ? `${page} ${myCompanySecteur}` : page
-             const svgPath = page === 'Page d\'accueil' ? `/svg/home.svg` : `/svg/plein.svg`
-             const placements = getPlacements(title,subtitle,myCompanySecteur,myCompanyMarche)
-             if (offerDetails) {
-               return (
-                 <CardOffer
-                   key={index}
-                   title={title}
-                   subtitle={subtitle}
-                   price={offerDetails.price.toString()}
-                   priceUnit={getPriceUnit(myCompanyOrigine)}
-                   duration={offerDetails.duration.toString()}
-                   durationUnit={offerDetails.durationUnit}
-                   svgPath={svgPath}
-                   placements={placements}
-                 />
-               );
-             } else {
-               return <div key={index}>No offer data for {placement} on {page}</div>;
-             }
-           })}
-         </div>
-       ))}
-     </div>
-     </div>
-   );
+     return (
+      <div>
+        <Filtre
+          title="Page désirée : "
+          options={allPages}
+          selected={filteredPages}
+          onChange={setFilteredPages}
+        />
+        <div className="offer-cards-container">
+          {filteredPagesAndPlacements.map(({ page, placements }) => (
+            placements.map((placement: string, index: number) => {
+              const offerDetails = findOfferData(page, placement, adType);
+              const title = (page === "Page d'accueil" && placement === 'Marché') 
+                ? `Marché ${myCompanyMarche} - Secteur ${myCompanySecteur}`
+                : placement;
+              const subtitle = page === 'Page Secteur' ? `${page} ${myCompanySecteur}` : page;
+              const svgPath = page === "Page d'accueil" ? `/svg/home.svg` : `/svg/plein.svg`;
+              const placementsData = getPlacements(title, subtitle, myCompanySecteur, myCompanyMarche);
+    
+              if (offerDetails) {
+                return (
+                  <CardOffer
+                    key={`${page}-${index}`}
+                    title={title}
+                    subtitle={subtitle}
+                    price={offerDetails.price.toString()}
+                    priceUnit={getPriceUnit(myCompanyOrigine)}
+                    duration={offerDetails.duration.toString()}
+                    durationUnit={offerDetails.durationUnit}
+                    svgPath={svgPath}
+                    placements={placementsData}
+                  />
+                );
+              } else {
+                return <div key={`${page}-${index}`}>No offer data for {placement} on {page}</div>;
+              }
+            })
+          ))}
+        </div>
+      </div>
+    );
  }
  
  export default OfferSelection;

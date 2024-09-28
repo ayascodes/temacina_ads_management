@@ -1,4 +1,4 @@
-import React from 'react'
+/* import React from 'react'
 import Draft  from '../components/choose_offer/draft'
 function test() {
   return (
@@ -6,4 +6,4 @@ function test() {
   )
 }
 
-export default test
+export default test */

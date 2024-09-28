@@ -133,7 +133,12 @@ function AdsCreation() {
         </Link>
         <Link 
           href={isRejected ? '#' : `/product_info`}
-          onClick={() => !isRejected && handleProductAdClick(product.id)}
+          onClick={() => {
+            if (!isProductRejected(selectedProductId)) {
+              handleProductAdClick(selectedProductId);
+              handleAdCreation('produit');
+            }
+          }}
           style={linkStyle}
         >
           <AdsClickIcon style={iconStyle} />
@@ -204,7 +209,7 @@ function AdsCreation() {
           onClick={() => {
             if (!isProductRejected(selectedProductId)) {
               handleProductAdClick(selectedProductId);
-              handleAdCreation('product');
+              handleAdCreation('produit');
             }
           }}          
           style={{ pointerEvents: isProductRejected(selectedProductId) ? 'none' : 'auto' }}
