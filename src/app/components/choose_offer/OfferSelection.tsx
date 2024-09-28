@@ -1,55 +1,32 @@
+"use client";
 import React, { useState, useEffect } from 'react';
+import CardOffer from '../offer_card/page';
 import { useSelector } from 'react-redux';
-import  OfferCard  from '../offer_card/page'; // Assuming OfferCard is in the same directory
+import Filtre from '../filter/page'; 
+import { getPlacements } from './placementGen';
 
-// You'll need to import or define these types
-// import { CompanyType, Marche, Secteur } from './types';
-    type companyType: 'ordinaire' | 'artisanal' | 'startup';
-    type companyMarche: 'algérien' | 'international';
-    type companySecteur: 'Industrie' | 'Agriculture' | 'Construction' | 'ITech';
-    type origineEntreprise: 'algérienne' | 'internationale';
-const getPlacementId = (
-  placementType: string,
-  companyType: companyType,
-  companyMarche: companyMarche,
-  companySecteur: companySecteur,
-  offerData: any
-): string => {
-  switch (placementType) {
-    case "Mega Haut Slide":
-      return "mega_haut_slide";
-    case "Nouvel arrivage":
-      return "nv-arrivage";
-    case "Meilleurs produits":
-      return "mr-produits";
-    case "Soldes":
-      return "soldes";
-    case "LeMarché":
-      return `${offerData.marcheMap[companyMarche]}-${offerData.secteurMap[companySecteur]}`;
-    case "Produit artisanal":
-      return `pa-${offerData.marcheMap[companyMarche]}`;
-    case "Startup":
-      return `st-${offerData.secteurMap[companySecteur]}`;
-    case "Plein page":
-      if (companyType === 'ordinaire') {
-        return offerData.secteurMap[companySecteur];
-      }
-      return "plein-page";
-    default:
-      return "unknown";
-  }
-};
-
-const OfferCardsGenerator: React.FC<{
-  currentPage: string;
-}> = ({ currentPage }) => {
+function OfferSelection() {
   const [companyData, setCompanyData] = useState<any>(null);
   const [offerData, setOfferData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [filteredPages, setFilteredPages] = useState<string[]>([]);
 
+  interface PagePlacement {
+    page: string;
+    placements: string[];
+  }
+
+  // Get adType from Redux store
   const adType = useSelector((state: any) => state.ad.currentAdType);
-
+  console.log("hey from offerSelection" , adType);
+  type CompanyType = 'ordinaire' | 'startup' | 'artisanal';
+  type AdType = 'produit' | 'megaHautSlide';
+  type CompanySecteur = 'Industrie'| 'Agriculture' | 'Construction' | 'ITech';
+  type CompanyMarche = 'algérien' | 'international';
+  type OrigineDeLEntreprise = 'algérienne' | 'internationale';
+  
+  // Fetching data
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -85,59 +62,151 @@ const OfferCardsGenerator: React.FC<{
   if (!companyData || !offerData) return <div>No data available</div>;
 
   const { company } = companyData;
+  const myCompanyType = company.Type;
+  const myCompanySecteur = company.selectedSectors;
+  const myCompanyMarche = company.selectedMarket;
+  const myCompanyOrigine = company.origin;
 
-  const getOfferData = (placement: string) => {
-    const placementId = getPlacementId(placement, company.type, company.marche, company.secteur, offerData);
-    return offerData[company.type][adType][placementId];
+  //getPriceUnit
+  const getPriceUnit = (origine: OrigineDeLEntreprise): string => {
+    return origine === 'algérienne' ? 'DZD' : 'USD';
   };
+  
 
-  const getPlacements = () => {
-    if (adType === 'megHautSlide') return ['Mega Haut Slide'];
-
-    switch (currentPage) {
-      case "Page d'accueil":
-        if (company.type === 'ordinaire') {
-          return ['Nouvel arrivage', 'Meilleurs produits', 'Soldes', 'LeMarché'];
-        } else if (company.type === 'startup') {
-          return ['Nouvel arrivage', 'Meilleurs produits', 'Soldes', 'Startup'];
-        } else if (company.type === 'artisanal') {
-          return ['Nouvel arrivage', 'Meilleurs produits', 'Soldes', 'Produit artisanal'];
-        }
-        break;
-      case "Page secteur":
-      case "Page Startup":
-      case "Page Produit artisanal":
-      case "Page Nouvel arrivage":
-      case "Page Meilleurs produits":
-      case "Page Soldes":
-        return ['Plein page'];
-      default:
-        return [];
+  // Generate pages and placements using adType
+  function generatePagesAndPlacements(
+    companyType: CompanyType,
+    adType: AdType,
+    companySecteur: CompanySecteur,
+    companyMarche: CompanyMarche
+  ): PagePlacement[] {
+    const pages: PagePlacement[] = [];
+  
+    // Common pages for all company types
+    const commonPages = ['Nouvel arrivage', 'Meilleurs produits', 'Soldes'];
+  
+    // Helper function to add a page with placements
+    const addPage = (pageName: string, placements: string[]) => {
+      pages.push({ page: pageName, placements });
+    };
+  
+    // Page d'accueil (Home page)
+    if (adType === 'produit') {
+      const homePlacements = [...commonPages];
+      if (companyType === 'ordinaire') {
+        homePlacements.push(`Marché`);
+      } else if (companyType === 'startup') {
+        homePlacements.push('Startup');
+      } else if (companyType === 'artisanal') {
+        homePlacements.push('Produit artisanal');
+      }
+      addPage("Page d'accueil", homePlacements);
+    } else if (adType === 'megaHautSlide') {
+      addPage("Page d'accueil", ['Mega Haut Slide']);
     }
+  
+    // Specific pages based on company type (No concatenation here)
+    if (companyType === 'ordinaire') {
+      addPage(`Page Secteur`, adType === 'produit' ? ['Plein page'] : ['Mega Haut Slide']);
+    } else if (companyType === 'startup') {
+      addPage('Page Startup', adType === 'produit' ? ['Plein page'] : ['Mega Haut Slide']);
+    } else if (companyType === 'artisanal') {
+      addPage('Page Produit artisanal', adType === 'produit' ? ['Plein page'] : ['Mega Haut Slide']);
+    }
+  
+    // Common pages for all types
+    commonPages.forEach(pageName => {
+      addPage(`Page ${pageName}`, adType === 'produit' ? ['Plein page'] : ['Mega Haut Slide']);
+    });
+  
+    return pages;
+  }
+  
+  const generatedPagesAndPlacements = generatePagesAndPlacements(myCompanyType, adType, myCompanySecteur, myCompanyMarche);
+
+  // Function to find the corresponding product for a given page and placement
+  const findOfferData = (pageName: string, placement: string, adType: AdType) => {
+    const page = offerData.pages.find((p: any) => p.name === pageName);
+  
+    if (!page) return null;
+  
+    if (adType === 'produit') {
+      // If adType is 'produit', search in the 'product' array
+      const productData = page.product.find((prod: any) => prod.title === placement);
+      if (productData) {
+        return {
+          price: productData.price,
+          duration: productData.duration,
+          durationUnit: productData.durationUnit
+        };
+      }
+    } else if (adType === 'megaHautSlide') {
+      // If adType is 'megaHautSlide', check if the placement matches the megaHautSlide key
+      if (page.megaHautSlide) {
+        return {
+          price: page.megaHautSlide.price,
+          duration: page.megaHautSlide.duration,
+          durationUnit: page.megaHautSlide.durationUnit
+        };
+      }
+    }
+  
+    return null;
   };
+   // Get all unique pages for the Filtre component
+   const allPages = Array.from(new Set(generatedPagesAndPlacements.map(item => item.page)));
 
-  const placements = getPlacements();
-
-  return (
-    <>
-      {placements.map((placement) => {
-        const data = getOfferData(placement);
-        return (
-          <OfferCard
-            key={placement}
-            title={placement}
-            subtitle={currentPage}
-            price={data.price}
-            priceUnit={company.type === 'ordinaire' ? 'USD' : 'EUR'}
-            duration={data.duration}
-            durationUnit={data.durationUnit}
-            svgPath={currentPage === "Page d'accueil" ? "/svg/home.svg" : "/svg/plein.svg"}
-            placements={[getPlacementId(placement, company.type, company.marche, company.secteur, offerData)]}
-          />
-        );
-      })}
-    </>
-  );
-};
-
-export default OfferCardsGenerator;
+   // Handle filter changes
+   const handleFilterChange = (selected: string[]) => {
+     setFilteredPages(selected);
+   };
+ 
+   // Filter the generatedPagesAndPlacements based on the selected pages
+   const filteredPagesAndPlacements = filteredPages.length > 0
+     ? generatedPagesAndPlacements.filter(item => filteredPages.includes(item.page))
+     : generatedPagesAndPlacements;
+ 
+   return (
+     <div >
+      {/* <Image src="/svg/home.svg" alt="My Icon" width={400} height={400} /> */}
+       <Filtre
+         title="Page désirée : "
+         options={allPages}
+         selected={filteredPages}
+         onChange={setFilteredPages}
+       />
+       <div className="offer-cards-container">
+       {filteredPagesAndPlacements.map(({ page, placements }) => (
+         <div key={page} >
+           {placements.map((placement: string, index: number) => {
+             const offerDetails = findOfferData(page, placement, adType);
+             const title= (page === 'Page d\'accueil' && placement==='Marché') ? `Marché ${myCompanyMarche} - Secteur ${myCompanySecteur}`: placement
+             const subtitle = page === 'Page Secteur' ? `${page} ${myCompanySecteur}` : page
+             const svgPath = page === 'Page d\'accueil' ? `/svg/home.svg` : `/svg/plein.svg`
+             const placements = getPlacements(title,subtitle,myCompanySecteur,myCompanyMarche)
+             if (offerDetails) {
+               return (
+                 <CardOffer
+                   key={index}
+                   title={title}
+                   subtitle={subtitle}
+                   price={offerDetails.price.toString()}
+                   priceUnit={getPriceUnit(myCompanyOrigine)}
+                   duration={offerDetails.duration.toString()}
+                   durationUnit={offerDetails.durationUnit}
+                   svgPath={svgPath}
+                   placements={placements}
+                 />
+               );
+             } else {
+               return <div key={index}>No offer data for {placement} on {page}</div>;
+             }
+           })}
+         </div>
+       ))}
+     </div>
+     </div>
+   );
+ }
+ 
+ export default OfferSelection;

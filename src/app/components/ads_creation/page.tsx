@@ -193,7 +193,7 @@ function AdsCreation() {
       <Container className='AdsCreationContainer'>
         <Link
         href={'/stepper'}
-        onClick={() => handleAdCreation('megaSlideHaut')}
+        onClick={() => handleAdCreation('megaHautSlide')}
         >
           <div className='AdsCreationButton' >
             <h3>Créer une publicite <span className="highlight">Mega Slide Haut</span></h3>

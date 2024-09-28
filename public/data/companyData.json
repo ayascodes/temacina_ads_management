@@ -1,6 +1,7 @@
 {
     "sectors": ["Industrie", "Agriculture", "Construction", "ITech"],
     "markets": ["algérien", "international"],
+    "origin":["algérienne", "internationale"],
     "currencies": ["Dinar algerian DZD", "Dolar USD"],
     "companyTypes": ["ordinaire","artisanal","startup"],
     "company": {
