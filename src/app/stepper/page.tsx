@@ -14,7 +14,7 @@ import { styled } from '@mui/material/styles';
 import Check from '@mui/icons-material/Check';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { StepIconProps } from '@mui/material/StepIcon';
-import ChooseOffer from '../components/choose_offer/page';
+import OfferSelection from '../components/choose_offer/OfferSelection';
 import CompleteInfoStep from '../components/complete_infos/page';
 import ValidationStep from '../components/validation/page';
 import PaymentStep from '../components/payment/page';
@@ -268,14 +268,9 @@ export default function HybridStepper() {
             ))}
           </Stepper>
           <Box sx={{ p: 3 }}>
-            {activeStep === 0 && companyData ? (
-              <ChooseOffer 
-                companyType={companyData.company.Type}
-                companyMarche={companyData.company.selectedMarket}
-                companySecteur={companyData.company.selectedSectors}
-                origineEntreprise={companyData.company.origin}
-              />
-            ) : allStepsCompleted() ? (
+          {activeStep === 0 && companyData ? (
+                <OfferSelection />
+              ) : allStepsCompleted() ? (
               <React.Fragment>
                 <Typography sx={{ mt: 2, mb: 1 }}>
                   All steps completed - you're finished

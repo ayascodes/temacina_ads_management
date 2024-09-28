@@ -1,139 +1,149 @@
 {
-    "offersInfo": [
-      {
-        "page": "Page d'accueil",
-        "placements": [
-          {
-            "name": "Nouvel arrivage",
-            "price": 1000,
-            "duration": {
-              "value": 7,
-              "unit": "jours"
-            }
-          },
-          {
-            "name": "Meilleurs produits",
-            "price": 1200,
-            "duration": {
-              "value": 7,
-              "unit": "jours"
-            }
-          },
-          {
-            "name": "Soldes",
-            "price": 1500,
-            "duration": {
-              "value": 14,
-              "unit": "jours"
-            }
-          },
-          {
-            "name": "Marché algérien",
-            "price": 800,
-            "duration": {
-              "value": 30,
-              "unit": "jours"
-            }
-          },
-          {
-            "name": "Marché international",
-            "price": 2000,
-            "duration": {
-              "value": 30,
-              "unit": "jours"
-            }
-          },
-          {
-            "name": "Produit artisanal",
-            "price": 900,
-            "duration": {
-              "value": 14,
-              "unit": "jours"
-            }
-          },
-          {
-            "name": "Startups",
-            "price": 750,
-            "duration": {
-              "value": 14,
-              "unit": "jours"
-            }
-          }
-        ]
-      },
-      {
-        "page": "Page Art",
-        "placements": [
-          {
-            "name": "Plein page",
-            "price": 3000,
-            "duration": {
-              "value": 30,
-              "unit": "jours"
-            }
-          }
-        ]
-      },
-      {
-        "page": "Page Startup",
-        "placements": [
-          {
-            "name": "Plein page",
-            "price": 2500,
-            "duration": {
-              "value": 30,
-              "unit": "jours"
-            }
-          }
-        ]
-      },
-      {
-        "page": "Page Nouvel arrivage",
-        "placements": [
-          {
-            "name": "Plein page",
-            "price": 2800,
-            "duration": {
-              "value": 14,
-              "unit": "jours"
-            }
-          }
-        ]
-      },
-      {
-        "page": "Page Meilleurs produits",
-        "placements": [
-          {
-            "name": "Plein page",
-            "price": 3200,
-            "duration": {
-              "value": 30,
-              "unit": "jours"
-            }
-          }
-        ]
-      },
-      {
-        "page": "Page Soldes",
-        "placements": [
-          {
-            "name": "Plein page",
-            "price": 3500,
-            "duration": {
-              "value": 14,
-              "unit": "jours"
-            }
-          }
-        ]
+  "pages": [
+    {
+      "name": "Page d'accueil",
+      "product": [
+        {
+          "title": "Nouvel arrivage",
+          "price": 1000,
+          "duration": 7,
+          "durationUnit": "jours"
+        },
+        {
+          "title": "Meilleurs produits",
+          "price": 1200,
+          "duration": 7,
+          "durationUnit": "jours"
+        },
+        {
+          "title": "Soldes",
+          "price": 1500,
+          "duration": 14,
+          "durationUnit": "jours"
+        },
+        {
+          "title": "Marché",
+          "price": 20000,
+          "duration": 30,
+          "durationUnit": "jours"
+        },
+        {
+          "title": "Produit artisanal",
+          "price": 9000,
+          "duration": 30,
+          "durationUnit": "jours"
+        },
+        {
+          "title": "Startup",
+          "price": 2000,
+          "duration": 30,
+          "durationUnit": "jours"
+        }
+      ],
+      "megaHautSlide": {
+        "price": 3000,
+        "duration": 7,
+        "durationUnit": "jours"
       }
-    ],
-    "companyInfo": {
-      "companyType": ["ordinaire", "art", "startup"],
-      "secteur": {
-        "options": ["Industrie", "Agriculture", "Construction", "ITech"],
-        "isOptional": true
-      },
-      "marchéVisé": ["national", "international"],
-      "origineDeLEntreprise": ["algérienne", "internationale"]
+    },
+    {
+      "name": "Page Nouvel arrivage",
+      "product": [
+        {
+          "title": "Plein page",
+          "price": 3000,
+          "duration": 30,
+          "durationUnit": "jours"
+        }
+      ],
+      "megaHautSlide": {
+        "price": 3500,
+        "duration": 7,
+        "durationUnit": "jours"
+      }
+    },
+    {
+      "name": "Page Meilleurs produits",
+      "product": [
+        {
+          "title": "Plein page",
+          "price": 3200,
+          "duration": 30,
+          "durationUnit": "jours"
+        }
+      ],
+      "megaHautSlide": {
+        "price": 7000,
+        "duration": 7,
+        "durationUnit": "jours"
+      }
+    },
+    {
+      "name": "Page Soldes",
+      "product": [
+        {
+          "title": "Plein page",
+          "price": 3500,
+          "duration": 14,
+          "durationUnit": "jours"
+        }
+      ],
+      "megaHautSlide": {
+        "price": 4000,
+        "duration": 7,
+        "durationUnit": "jours"
+      }
+    },
+    {
+      "name": "Page Secteur",
+      "product": [
+        {
+          "title": "Plein page",
+          "subtitle": "Page secteur",
+          "price": 6000,
+          "duration": 30,
+          "durationUnit": "jours"
+        }
+      ],
+      "megaHautSlide": {
+        "price": 8000,
+        "duration": 7,
+        "durationUnit": "jours"
+      }
+    },
+    {
+      "name": "Page Produit artisanal",
+      "product": [
+        {
+          "title": "Plein page",
+          "subtitle": "Page Produit artisanal",
+          "price": 2500,
+          "duration": 30,
+          "durationUnit": "jours"
+        }
+      ],
+      "megaHautSlide": {
+        "price": 2800,
+        "duration": 7,
+        "durationUnit": "jours"
+      }
+    },
+    {
+      "name": "Page Startup",
+      "product": [
+        {
+          "title": "Plein page",
+          "subtitle": "Page Startup",
+          "price": 2200,
+          "duration": 30,
+          "durationUnit": "jours"
+        }
+      ],
+      "megaHautSlide": {
+        "price": 2500,
+        "duration": 7,
+        "durationUnit": "jours"
+      }
     }
-  }
+  ]
+}
