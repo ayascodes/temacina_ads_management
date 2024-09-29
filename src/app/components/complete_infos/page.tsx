@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { Container, Paper } from '@mui/material';
+import DragAndDropUpload from '../drag_and_drop/dad';
+import PreviewComponent from '../drag_and_drop/PreviewComponent';
 type Product = {
   id: string;
   name: string;
@@ -28,6 +30,10 @@ const CompleteInfoStep: React.FC<CompleteInfoStepProps> = ({ formData, setFormDa
   const [products, setProducts] = useState<Product[]>([]);
 
   const paymentMethods = ['Credit Card', 'Paypal', 'Bank Transfer'];
+
+  // Get adType from Redux store
+  const adType = useSelector((state: any) => state.ad.currentAdType);
+  console.log("hey from COMPLETEINFO" , adType);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -82,12 +88,11 @@ const CompleteInfoStep: React.FC<CompleteInfoStepProps> = ({ formData, setFormDa
       
       <div className='CompleteInfoText'>
         <h1>Publicité <span className='highlight'> {selectedOffer.title} - {selectedOffer.subtitle}</span></h1>
-      {selectedProductName ? (
-        <h3>{selectedProductName}</h3>
-      ) : (
-        <h3>No Product Selected</h3>
-      )}
+        {selectedProductName && adType === 'produit' && (
+          <h3>{selectedProductName}</h3>
+        )}
       </div>
+
 
 
       <div className='CompleteInfoInputContainer'>
@@ -150,6 +155,16 @@ const CompleteInfoStep: React.FC<CompleteInfoStepProps> = ({ formData, setFormDa
               className='CompleteInfoInput'
             />
       </div>
+        {adType === 'megaHautSlide' && (
+          <div style={{ padding: '20px' }}>
+          <h2>File Upload Example with TypeScript and Redux</h2>
+          {/* Drag and Drop Upload */}
+          <DragAndDropUpload />
+    
+          {/* Button to visualize the uploaded image */}
+          <PreviewComponent />
+        </div>
+        )}
     </Paper>
     </Container>
     </>

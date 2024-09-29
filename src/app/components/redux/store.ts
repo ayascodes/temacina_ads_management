@@ -4,6 +4,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import productReducer from '../features/product/productSlice';
 import offerReducer from '../features/offer/offerSlice'; // Import offer slice
 import adSliceReducer from '../features/ad/adSlice';
+import fileReducer from '../features/file/fileSlice';
 
 export const makeStore = () => {
   return configureStore({
@@ -11,6 +12,7 @@ export const makeStore = () => {
       product: productReducer,
       offer: offerReducer,
       ad: adSliceReducer, // Import ad slice here,
+      file: fileReducer,
     },
   });
 };

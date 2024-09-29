@@ -1,9 +1,19 @@
-/* import React from 'react'
-import Draft  from '../components/choose_offer/draft'
-function test() {
-  return (
-    <Draft />
-  )
-}
+// ParentComponent.tsx
+import React from 'react';
+import DragAndDropUpload from '../components/drag_and_drop/dad';
+import PreviewComponent from '../components/drag_and_drop/PreviewComponent';
 
-export default test */
+const ParentComponent: React.FC = () => {
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>File Upload Example with TypeScript and Redux</h2>
+      {/* Drag and Drop Upload */}
+      <DragAndDropUpload />
+
+      {/* Button to visualize the uploaded image */}
+      <PreviewComponent />
+    </div>
+  );
+};
+
+export default ParentComponent;
