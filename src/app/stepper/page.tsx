@@ -18,7 +18,7 @@ import OfferSelection from '../components/choose_offer/OfferSelection';
 import CompleteInfoStep from '../components/complete_infos/page';
 import ValidationStep from '../components/validation/page';
 import PaymentStep from '../components/payment/page';
-import { addAd } from '../components/features/ad/adSlice';
+import { addAdDetails } from '../components/features/ad/adSlice';
 import { RootState } from '../components/redux/store';
 
 const CustomConnector = styled(StepConnector)(({ theme }) => ({
@@ -94,6 +94,9 @@ export default function HybridStepper() {
   const selectedProductId = useSelector((state: RootState) => state.product.selectedProductId);
   const [products, setProducts] = useState<Product[]>([]);
   const [adCreated, setAdCreated] = useState(false);
+  const adType = useSelector((state: RootState) => state.ad.currentAdType);
+  const currentAd = useSelector((state: RootState) => state.ad.currentAd);
+
 
   const [formData, setFormData] = useState({
     startDate: '',
@@ -179,12 +182,13 @@ export default function HybridStepper() {
   };
   const selectedProductName = getProductNameById(selectedProductId);
 
-  const handleAdCreation = () => {
-    if (selectedOffer && selectedProductId) {
+ const handleAdCreation = () => {
+    if (selectedOffer) {
       const totalDuration = selectedOffer.duration + formData.additionalDuration;
       const newAd = {
-        productId: selectedProductId,
-        type_de_publicite: selectedProductName, // Assuming this is correct, adjust if needed
+        id: currentAd?.id, // Use the id from currentAd if it exists
+        productId: adType === 'produit' ? selectedProductId : null,
+        type_de_publicite: adType === 'produit' ? selectedProductName :"Mega Haut Slide",
         offerId: selectedOffer.id,
         offerTitle: selectedOffer.title,
         offerSubtitle: selectedOffer.subtitle,
@@ -193,14 +197,16 @@ export default function HybridStepper() {
         duree: totalDuration,
         montant_totale: `${calculateTotalPrice(selectedOffer.price, totalDuration)} ${selectedOffer.priceUnit}`.trim(),
         durationUnit: selectedOffer.durationUnit,
-        origine_de_lentreprise: companyData.company.origin, // Adjust as needed
+        origine_de_lentreprise: companyData.company.origin,
         paymentMethod: formData.paymentMethod,
         status: 'Pending',
+        file: currentAd?.file, // Include the file data if it exists
       };
-      dispatch(addAd(newAd));
+      dispatch(addAdDetails(newAd));
+      console.log("New Ad Object:", newAd);
       setShowAlert(true);
       setActiveStep(2); // Move to Validation step
-      setAdCreated(true); // Set adCreated to true after creating the ad
+      setAdCreated(true);
     }
   };
 
@@ -321,12 +327,13 @@ export default function HybridStepper() {
                     Retour
                   </Button>
                   <Button 
-                    onClick={handleNext} 
-                    className="nextBtn"
-                    disabled={isNextButtonDisabled()}
-                  >
-                    {activeStep === steps.length - 1 ? 'Fin' : 'Continuer'}
-                  </Button>
+                      onClick={activeStep === 2 && adStatus !== 'approved' ? () => window.location.href = '/' : handleNext} 
+                      className="nextBtn"
+                    >
+                      {activeStep === 2 && adStatus !== 'approved' 
+                        ? 'Retour à la page principale du marketing visuel'
+                        : activeStep === steps.length - 1 ? 'Fin' : 'Continuer'}
+                    </Button>
                 </Box>
               </React.Fragment>
             )}

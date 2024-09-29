@@ -30,16 +30,16 @@ const AdList: React.FC = () => {
 
   return (
     <div className="ad-list p-4">
-      <h1>Ad List</h1>
+      <h1>Gérez vos annonces ici</h1>
       
       <Filtre
-        title="Status Filter"
+        title="Status "
         options={statusOptions}
         selected={selectedStatus}
         onChange={setSelectedStatus}
       />
       <Filtre
-        title="Type Filter"
+        title="Type "
         options={typeOptions}
         selected={selectedType}
         onChange={setSelectedType}

@@ -1,30 +1,26 @@
 // PreviewComponent.tsx
 "use client";
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { setPreviewUrl } from '../features/file/fileSlice';
-import { RootState } from '../redux/store'; // Import RootState type for Redux
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const PreviewComponent: React.FC = () => {
-  const dispatch = useDispatch();
-  const { files } = useSelector((state: RootState) => state.file);
+  const currentAd = useSelector((state: RootState) => state.ad.currentAd);
   const [previewUrl, setPreviewUrlState] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
   const handleVisualize = () => {
-    if (files.length > 0) {
-      const file = files[0].file;
-      const newPreviewUrl = URL.createObjectURL(file);
-      setPreviewUrlState(newPreviewUrl); // Set the preview URL in local state
-      setModalOpen(true); // Open the modal
-      dispatch(setPreviewUrl(newPreviewUrl)); // Optionally set preview URL in Redux
+    if (currentAd?.file) {
+      const newPreviewUrl = URL.createObjectURL(currentAd.file);
+      setPreviewUrlState(newPreviewUrl);
+      setModalOpen(true);
     } else {
       alert('No file uploaded to visualize.');
     }
   };
 
   const handleConfirm = () => {
-    setModalOpen(false); // Close the modal
+    setModalOpen(false);
     // Additional confirm logic can be added here if needed
   };
 
@@ -82,11 +78,11 @@ const modalStyles: React.CSSProperties = {
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: 'rgba(0, 0, 0, 0.7)', // Semi-transparent background
+  backgroundColor: 'rgba(0, 0, 0, 0.7)',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  zIndex: 1000, // Make sure the modal is on top
+  zIndex: 1000,
 };
 
 const modalContentStyles: React.CSSProperties = {

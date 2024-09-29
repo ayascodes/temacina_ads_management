@@ -1,30 +1,44 @@
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Ad, AdStatus, AdType } from '../../../interfaces/adInterface'; // Import from your ad interface file
+import { Ad, AdStatus, AdType } from '../../../interfaces/adInterface';
 
 interface AdsState {
   ads: Ad[];
   currentAdType: AdType | null;
+  currentAd: Partial<Ad> | null;
 }
 
-// Initial state
 const initialState: AdsState = {
   ads: [],
   currentAdType: null,
+  currentAd: null,
 };
 
 const adsSlice = createSlice({
   name: 'ads',
   initialState,
   reducers: {
-    // Set the current ad type
     setCurrentAdType: (state, action: PayloadAction<AdType>) => {
       state.currentAdType = action.payload;
     },
-
-    // Add a new ad
-    addAd: (state, action: PayloadAction<Ad>) => {
-      state.ads.push(action.payload);
+    addFileData: (state, action: PayloadAction<{ id: string; file: File }>) => {
+      state.currentAd = {
+        ...state.currentAd,
+        id: action.payload.id,
+        file: action.payload.file,
+        status: 'draft',
+      };
     },
+    addAdDetails: (state, action: PayloadAction<Ad>) => {
+      const newAd: Ad = {
+        ...action.payload,
+        id: state.currentAd?.id || action.payload.id,
+        file: state.currentAd?.file || action.payload.file,
+      };
+      state.ads.push(newAd);
+      state.currentAd = null;
+    },
+
 
     // Update an existing ad by id
     updateAd: (state, action: PayloadAction<Ad>) => {
@@ -51,7 +65,8 @@ const adsSlice = createSlice({
 
 export const { 
   setCurrentAdType, 
-  addAd, 
+  addFileData, 
+  addAdDetails, 
   updateAd, 
   updateAdStatus, 
   resetCurrentAdType 
