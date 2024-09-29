@@ -184,7 +184,7 @@ export default function HybridStepper() {
 
  const handleAdCreation = () => {
     if (selectedOffer) {
-      const totalDuration = selectedOffer.duration + formData.additionalDuration;
+      const totalDuration = Number(selectedOffer.duration) + Number(formData.additionalDuration);
       const newAd = {
         id: currentAd?.id, // Use the id from currentAd if it exists
         productId: adType === 'produit' ? selectedProductId : null,
@@ -211,7 +211,8 @@ export default function HybridStepper() {
   };
 
   const calculateTotalPrice = (price: number, duration: number): string => {
-    return ((price * duration) / selectedOffer.duration).toFixed(2);
+    const totalPrice = (price * duration) / Number(selectedOffer.duration);
+    return totalPrice.toFixed(2);
   };
 
   const handleBack = () => {
