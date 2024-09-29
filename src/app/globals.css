@@ -424,7 +424,24 @@ a[style*="pointer-events: none"] {
   pointer-events: none; /* Prevent interaction with blurred elements */
 }
 
+.upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 20px;
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
 
+.drop-zone {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.drag-active {
+  border-color: #000;
+  background-color: #f0f0f0;
+}
 /* .poppins-thin {
   font-family: "Poppins", sans-serif;
   font-weight: 100;
